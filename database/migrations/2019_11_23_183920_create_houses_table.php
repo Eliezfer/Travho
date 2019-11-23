@@ -16,6 +16,11 @@ class CreateHousesTable extends Migration
         Schema::create('houses', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
+            $table->foreign('address_id')->references('id')->on('houses');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->string('description');
+            $table->string('priceForDay');
+            $table->boolean('status');
         });
     }
 
