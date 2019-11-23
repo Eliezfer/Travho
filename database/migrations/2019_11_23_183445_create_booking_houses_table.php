@@ -16,9 +16,8 @@ class CreateBookingHousesTable extends Migration
         Schema::create('booking_houses', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedBigInteger('house_id');
-
-            $table->foreign('user_id')->references('user_id')->on('users');
             $table->foreign('house_id')->references('id')->on('houses');
             $table->dateTime('check_in');
             $table->dateTime('check_out');
