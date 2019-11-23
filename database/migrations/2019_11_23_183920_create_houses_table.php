@@ -19,7 +19,7 @@ class CreateHousesTable extends Migration
             $table->foreign('address_id')->references('id')->on('houses');
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('description');
-            $table->string('priceForDay');
+            $table->string('price_for_day');
             $table->boolean('status');
         });
     }
