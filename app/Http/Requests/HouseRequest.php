@@ -13,7 +13,7 @@ class HouseRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,7 +25,7 @@ class HouseRequest extends FormRequest
     {
         return [
             'data.description'=>'required',
-            'data.priceForDay'=>'numeric|gt:0|required',
+            'data.price_for_day'=>'numeric|gt:0|required',
             'data.status'=>'required',
 
             'address.country'=>'required',
@@ -34,9 +34,10 @@ class HouseRequest extends FormRequest
             'address.street'=>'required',
             'address.crossStreet1'=>'required',
             'address.crossStreet2'=>'required',
-            'address.houseNumber'=>'required',
+            'address.house_number'=>'required',
             'address.suburb'=>'required',
-            'postalCode'=>'required|numeric'
+            'address.postcode'=>'required|numeric'
+
         ];
     }
 }

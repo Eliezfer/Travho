@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Address;
 use App\House;
+use App\User;
 use Illuminate\Http\Request;
-
+use App\Http\Requests\HouseRequest;
 class HouseController extends Controller
 {
     /**
@@ -33,9 +35,18 @@ class HouseController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(HouseRequest $request)
     {
+       $data_address=$request['address'];
+       $data_house=$request['data'];
+       $address=Address::create($data_address);
+       $data_house["address_id"]=$address['id'];
+       //Esto se cambia con la validacion de token para saber el id del usuario
+       $user=User::findorfail(1);
+       $data_house["user_id"]=1;
+       $house=House::create($data_house);
 
+        return( $house );
     }
 
     /**

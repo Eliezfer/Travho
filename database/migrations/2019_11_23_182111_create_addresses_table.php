@@ -22,7 +22,7 @@ class CreateAddressesTable extends Migration
           	$table->string('street');
             $table->string('crossStreet1');
           	$table->string('crossStreet2');
-            $table->string('numberHouse');
+            $table->string('house_number');
             $table->string('suburb');
             $table->string('postcode');
         });

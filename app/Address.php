@@ -9,6 +9,6 @@ class Address extends Model
     //
     protected $fillable = [
         'country','state','municipality','street','crossStreet1','crossStreet2',
-        'numberHouse','suburb','postcode',
+        'house_number','suburb','postcode',
     ];
 }
