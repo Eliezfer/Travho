@@ -35,7 +35,7 @@ class HouseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
@@ -48,6 +48,7 @@ class HouseController extends Controller
     {
         //
     }
+
 
     /**
      * Show the form for editing the specified resource.

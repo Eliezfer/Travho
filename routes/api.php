@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Symfony\Component\Routing\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,9 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/houses','HouseController@index');
+Route::post('/houses', 'HouseController@store');
+Route::get('/houses/{id}','HouseController@show');
+Route::put('/houses/{id}', 'HouseController@update');
+
