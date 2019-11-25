@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\BookingHouse;
 use Illuminate\Http\Request;
+use Response;
+use App\Http\Requests\BookingHouseCreateRequest;
 
 class BookingHouseController extends Controller
 {
@@ -15,6 +17,7 @@ class BookingHouseController extends Controller
     public function index()
     {
         //
+        return Response::json(BookingHouse::all(),200);
     }
 
     /**
@@ -33,9 +36,11 @@ class BookingHouseController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BookingHouseCreateRequest $request)
     {
         //
+        $bookingHouse = BookingHouse::create($request->all());
+        return Response::json($bookingHouse,201);
     }
 
     /**
@@ -47,6 +52,7 @@ class BookingHouseController extends Controller
     public function show(BookingHouse $bookingHouse)
     {
         //
+        return $bookingHouse;
     }
 
     /**
@@ -70,6 +76,9 @@ class BookingHouseController extends Controller
     public function update(Request $request, BookingHouse $bookingHouse)
     {
         //
+        $attribute = $request->all();
+        $bookingHouse->update($attribute);
+        return $bookingHouse;
     }
 
     /**
