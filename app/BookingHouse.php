@@ -8,7 +8,7 @@ class BookingHouse extends Model
 {
     //
     protected $fillable = [
-		'user_id', 'house_id', 'check_in', 'check_out', 'date_request', 'status'
+		'user_id', 'house_id', 'check_in', 'check_out', 'status'
   ];
 
 }
