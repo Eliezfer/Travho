@@ -62,15 +62,15 @@ class RegisterController extends Controller
      * @return \App\User
      */
 
-     // Colocar modelo 
-     // Quitar fecha de nacimiento 
+        // Colocar modelo
+        // Quitar fecha de nacimiento
     protected function create(array $data)
     {
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'api_token' => Str::random(80),
+            'api_token' => Str::random(),
         ]);
     }
 }
