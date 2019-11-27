@@ -45,6 +45,7 @@ class UserController extends Controller
         $data = $request['data'];
 
         // Create a new product
+        // PASSWORD 
         $user = User::create($data);
 
         // Save product in the DB
@@ -63,6 +64,7 @@ class UserController extends Controller
     {
         //
         // Se busca el usuario en tabla 
+        // Handler
         $user = user::findOrFail($id);
         // Se retorna el usuario solicitado, con la representación adecuada
         return new UserResource($user);

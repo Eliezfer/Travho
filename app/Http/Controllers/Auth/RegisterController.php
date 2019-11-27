@@ -61,6 +61,9 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\User
      */
+
+     // Colocar modelo 
+     // Quitar fecha de nacimiento 
     protected function create(array $data)
     {
         return User::create([

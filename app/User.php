@@ -18,7 +18,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'user',
-        'password',
+        'password', // Quitar USER::CREATE(QUITAR PASSWORD)
         'cellphone',  
         'email',  
         'birthdate',
