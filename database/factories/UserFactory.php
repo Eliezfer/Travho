@@ -26,7 +26,7 @@ $factory->define(User::class, function (Faker $faker) {
         'birthdate' => '1998-05-01',
         'password' => '12345', // password
         'remember_token' => Str::random(10),
-        
+        'api_token' => Str::random(80)
 
     ];
 });
