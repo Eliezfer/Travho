@@ -12,8 +12,8 @@ $factory->define(Address::class, function (Faker $faker) {
         'state' => $faker->state,
         'municipality' => 'merida',
         'street' => $faker->streetName,
-        'crossStreet1'=>$faker->streetName,
-        'crossStreet2'=>$faker->streetName,
+        'cross_street1'=>$faker->streetName,
+        'cross_street2'=>$faker->streetName,
         'numberHouse'=> $faker->buildingNumber ,
         'suburb'=> 'Azcorra',
         'postcode'=> $faker ->postcode
