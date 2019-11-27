@@ -32,8 +32,8 @@ class HouseRequest extends FormRequest
             'address.state'=>'required',
             'address.municipality'=>'required',
             'address.street'=>'required',
-            'address.crossStreet1'=>'required',
-            'address.crossStreet2'=>'required',
+            'address.cross_street1'=>'required',
+            'address.cross_street2'=>'required',
             'address.house_number'=>'required',
             'address.suburb'=>'required',
             'address.postcode'=>'required|numeric'

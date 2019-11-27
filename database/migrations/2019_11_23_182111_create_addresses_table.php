@@ -20,8 +20,8 @@ class CreateAddressesTable extends Migration
           	$table->string('state');
             $table->string('municipality');
           	$table->string('street');
-            $table->string('crossStreet1');
-          	$table->string('crossStreet2');
+            $table->string('cross_street1');
+          	$table->string('cross_street2');
             $table->string('house_number');
             $table->string('suburb');
             $table->string('postcode');

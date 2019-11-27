@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use App\Address;
 use App\House;
 use App\User;
+
 use Illuminate\Http\Request;
 use App\Http\Requests\HouseRequest;
+
+use App\Http\Resources\House as HouseResource;
+use App\Http\Resources\HouseCollection;
 class HouseController extends Controller
 {
     /**
@@ -16,7 +20,8 @@ class HouseController extends Controller
      */
     public function index()
     {
-        //
+        $houses=House::get();
+        return new HouseCollection($houses);
     }
 
     /**
@@ -43,10 +48,10 @@ class HouseController extends Controller
        $data_house["address_id"]=$address['id'];
        //Esto se cambia con la validacion de token para saber el id del usuario
        $user=User::findorfail(1);
+       //blabla
        $data_house["user_id"]=1;
        $house=House::create($data_house);
-
-        return( $house );
+        return new HouseResource($house);
     }
 
     /**
@@ -55,9 +60,10 @@ class HouseController extends Controller
      * @param  \App\House  $house
      * @return \Illuminate\Http\Response
      */
-    public function show(House $house)
+    public function show($id)
     {
-        //
+        $house=House::findorfail($id);
+        return new HouseResource($house);
     }
 
 
@@ -79,9 +85,18 @@ class HouseController extends Controller
      * @param  \App\House  $house
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, House $house)
+    public function update($id,HouseRequest $request)
     {
-        //
+        $data_address=$request['address'];
+        $data_house=$request['data'];
+
+        $house=House::findorfail($id);
+
+        $address=Address::findorfail($house['address_id']);
+        $house->update($data_house);
+        $address->update($data_address);
+
+         return new HouseResource($house);
     }
 
     /**

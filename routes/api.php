@@ -22,3 +22,4 @@ Route::post('/houses', 'HouseController@store');
 Route::get('/houses/{id}','HouseController@show');
 Route::put('/houses/{id}', 'HouseController@update');
 
+
