@@ -17,7 +17,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/houses','HouseController@index');
+Route::get('/houses','HouseController@index'); //'implementar el filtrado con query buider
 Route::post('/houses', 'HouseController@store');
 Route::get('/houses/{id}','HouseController@show');
 Route::put('/houses/{id}', 'HouseController@update');
