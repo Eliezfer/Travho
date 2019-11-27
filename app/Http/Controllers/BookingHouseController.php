@@ -4,9 +4,16 @@ namespace App\Http\Controllers;
 
 use App\BookingHouse;
 use Illuminate\Http\Request;
+use Response;
+use App\Http\Requests\BookingHouseCreateRequest;
 
 class BookingHouseController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -15,6 +22,10 @@ class BookingHouseController extends Controller
     public function index()
     {
         //
+        $bookingsHouse = BookingHouse::orderBy('id','DESC')
+            ->where('user_id', auth()->user()->id )
+            ->paginate(10);
+        return Response::json($bookingsHouse,200);
     }
 
     /**
@@ -33,9 +44,13 @@ class BookingHouseController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BookingHouseCreateRequest $request)
     {
         //
+        $input=$request->all();
+        $input['user_id']=auth()->user()->id ;
+        $bookingHouse = BookingHouse::create($input);
+        return Response::json($bookingHouse,201);
     }
 
     /**
@@ -47,6 +62,8 @@ class BookingHouseController extends Controller
     public function show(BookingHouse $bookingHouse)
     {
         //
+        $this->authorize('view',$bookingHouse);
+        return $bookingHouse;
     }
 
     /**
@@ -70,6 +87,10 @@ class BookingHouseController extends Controller
     public function update(Request $request, BookingHouse $bookingHouse)
     {
         //
+        //BookingHouse->status()
+        $attribute = $request->all();
+        $bookingHouse->update($attribute);
+        return $bookingHouse;
     }
 
     /**

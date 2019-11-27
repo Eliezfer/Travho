@@ -3,8 +3,12 @@
 namespace App\Exceptions;
 
 use Exception;
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
@@ -47,15 +51,23 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        // return parent::render($request, $exception);
         if ($exception instanceof ModelNotFoundException) {
-            return response()->json([
-                "errors" => [[
-                    "code" => "ERROR-2",
-                    "title" => "Not Found"
-                ]]
-            ], 404);
+            $json = [
+                'code' => 'ERROR-2',
+                'title' =>'NOT FOUND',
+                'message' => 'No se encontro el recurso'
+            ];
+            return Response::json(['errors' =>$json], JsonResponse::HTTP_NOT_FOUND);
         }
+        if ($exception instanceof AuthorizationException) {
+            $json = [
+                'code' => 'ERROR-3',
+                'title' =>'FORBIDDEN',
+                'message' => 'Usted no tiene permisos para esta acción'
+            ];
+            return Response::json(['errors' =>$json], JsonResponse::HTTP_FORBIDDEN);
+        }
+        
         return parent::render($request, $exception);
 
     }

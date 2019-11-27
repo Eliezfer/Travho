@@ -21,7 +21,6 @@ class CreateBookingHousesTable extends Migration
             $table->foreign('house_id')->references('id')->on('houses');
             $table->dateTime('check_in');
             $table->dateTime('check_out');
-            $table->dateTime('date_request');
             $table->enum('status', ['accepted','canceled','rejected', 'in process']);
             $table->timestamps();
         });
