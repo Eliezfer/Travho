@@ -36,6 +36,7 @@ Route::get('bookings/{bookingHouse}', 'BookingHouseController@show');
  * Edit a booking
  */
 Route::put('booking/{bookingHouse}', 'BookingHouseController@update');
+
 Route::get('/houses','HouseController@index'); //'implementar el filtrado con query buider
 Route::post('/houses', 'HouseController@store');
 Route::get('/houses/{id}','HouseController@show');

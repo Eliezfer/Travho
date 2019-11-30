@@ -48,10 +48,12 @@ class HouseController extends Controller
        $data_house["address_id"]=$address['id'];
        //Esto se cambia con la validacion de token para saber el id del usuario
        $user=User::findorfail(1);
-       //blabla
+       //bla bla
        $data_house["user_id"]=1;
        $house=House::create($data_house);
-        return new HouseResource($house);
+        //return new HouseResource($house);
+
+       return( $house->address);
     }
 
     /**

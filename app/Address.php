@@ -11,4 +11,5 @@ class Address extends Model
         'country','state','municipality','street','cross_street1','cross_street2',
         'house_number','suburb','postcode',
     ];
+
 }
