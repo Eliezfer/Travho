@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Str;
 
 class User extends JsonResource
 {
@@ -16,7 +17,7 @@ class User extends JsonResource
     {
         //return parent::toArray($request);
         //
-        $URL = env("APP_URL");
+
         return[
             'id' => $this->id,
             'data' => [
@@ -26,9 +27,10 @@ class User extends JsonResource
             'date'      => $this->birthdate, // 1/05/1998
             'teléfono'  => $this->cellphone,
             'correo'    => $this->email,
+            //'api_token' => $this->api_token,
             ],
         'link' =>[
-            'self' => $URL.":8000/api/users/".$this->id
+            'self' => config('app.url').":8000/api/users/".$this->id
         ],
             
         ];

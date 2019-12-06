@@ -13,9 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::middleware('auth:api')->get('/users', 'UserController@index');
 
 /**
  * Create booking
@@ -42,11 +40,17 @@ Route::post('/houses', 'HouseController@store');
 Route::get('/houses/{id}','HouseController@show');
 Route::put('/houses/{id}', 'HouseController@update');
 
+// Login
+Route::POST('users/login', 'UserController@login');
+
+// Logout
+Route::POST('users/logout', 'UserController@logout');
+
 // Returns the list of registered users
-Route::GET('users', "UserController@index");
+//Route::GET('users', "UserController@index")->middleware('auth');
 
 // Create a user
-Route::POST('users', "UserController@store");
+Route::POST('users', "UserController@store")->middleware('auth');
 
 // Return a User by ID
 Route::GET('users/{id}', "UserController@show");
