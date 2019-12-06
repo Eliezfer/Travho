@@ -15,13 +15,14 @@ class User extends JsonResource
     public function toArray($request)
     {
         //return parent::toArray($request);
+        //
         $URL = env("APP_URL");
         return[
             'id' => $this->id,
             'data' => [
             'nombre'    => $this->name,
             'usuario'   => $this->user,
-            'password'  => $this->password,
+            //'password'  => $this->password,
             'date'      => $this->birthdate, // 1/05/1998
             'teléfono'  => $this->cellphone,
             'correo'    => $this->email,
