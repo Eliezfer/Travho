@@ -17,7 +17,7 @@ class Authenticate extends Middleware
     protected function redirectTo($request)
     {
         if (! $request->expectsJson()) {
-            
+
             $json = [
                 'code' => 'ERROR-4',
                 'title' =>'UNAUTHORIZED',

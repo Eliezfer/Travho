@@ -11,6 +11,8 @@ use App\Http\Requests\HouseRequest;
 
 use App\Http\Resources\House as HouseResource;
 use App\Http\Resources\HouseCollection;
+use Illuminate\Support\Collection;
+
 class HouseController extends Controller
 {
     /**
@@ -18,10 +20,24 @@ class HouseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $houses=House::get();
-        return new HouseCollection($houses);
+        $query=$request->query();
+        if(empty($query)){
+            $houses=House::get();
+            return new HouseCollection($houses);
+
+        }
+        //$houses=House::select('address_id')->get();
+        $address=Address::select('id')->where('state','=','yucatan')->get();
+        foreach($address as $add){
+            $houses[]=House::findOrfail($add['id']);
+        }
+
+        $housesCollection=Collection::make($houses);
+        return new HouseCollection($housesCollection);
+
+        //return $houses;
     }
 
     /**
@@ -51,9 +67,7 @@ class HouseController extends Controller
        //bla bla
        $data_house["user_id"]=1;
        $house=House::create($data_house);
-        //return new HouseResource($house);
-
-       return( $house->address);
+       return new HouseResource($house);
     }
 
     /**

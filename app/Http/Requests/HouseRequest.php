@@ -3,7 +3,10 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
+use function PHPSTORM_META\type;
 class HouseRequest extends FormRequest
 {
     /**
@@ -39,5 +42,13 @@ class HouseRequest extends FormRequest
             'address.postcode'=>'required|numeric'
 
         ];
+    }
+    protected function failedValidation(Validator $validator)
+    {
+        $error=[
+            "code" => "ERROR-1",
+            "title" =>"Uprocessable Entity"
+        ];
+        throw new HttpResponseException(response()->json(['errors'=>[$error]],422));
     }
 }
