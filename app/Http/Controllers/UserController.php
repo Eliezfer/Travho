@@ -7,17 +7,68 @@ use \Illuminate\Validation\Validator;
 use App\Http\Resources\User as UserResource;
 use App\Http\Resources\UserCollection;
 use App\Http\Requests\UserRequest;
+use Illuminate\Support\Str;
+use Illuminate\Auth\AuthenticationException;
+
 
 class UserController extends Controller
 {
+
+    // public function __construct()
+    // {
+    //     $this->middleware('auth:api');
+    // }
     /**
+     *  User login
+     * 
+     */
+    public function login(Request $request){
+        $data = $request['data'];
+        // Se filtra por email
+        $user = User::where('email', $data['email'])->first();
+
+        // Se verifica el email y el password 
+        if($user && ($data['password'] == $user->password )){
+            return response()->json([
+                'data' => [
+                'name' => $user->name,
+                'user' => $user->user,
+                'email' => $user->email,
+                'api_token' => $user->api_token
+                ]
+            ], 200);
+        }else{
+            // Mensaje de error 
+            return response()->json(["error" => "No content"],406);
+        }
+                
+
+    }
+ 
+    public function logout(Request $request){
+        $data = $request['data'];
+        // Se filtra por email
+        $user = User::where('email', $data['email'])->first();
+        // Se verifica el email y el password 
+        if($user && ($data['password'] == $user->password )){
+            $data = [Str::random(80)];
+            $user->update($data);
+            return response()->json([
+                "Logout"
+            ], 200);
+        }
+
+    }
+
+    /**
+     * 
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index( Request $request)
     {
-        //
+        $header = $request->header('api_token');
         // $users = User::all();
         // return response()->json($users,200);
         return UserResource::collection(User::all());
@@ -39,14 +90,24 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UserRequest $request)
+    protected function store(UserRequest $request)
     {
         // Get data from JSON
         $data = $request['data'];
+        
+        // Generate Token API
 
         // Create a new product
         // PASSWORD 
-        $user = User::create($data);
+        $user = User::create([
+           'name' => $data['name'],
+            'user' => $data['user'],
+            'password' => $data['password'],
+            'cellphone' => $data['cellphone'],
+            'email' => $data['email'],
+            'birthdate' => $data['birthdate'],
+            'api_token' => Str::random(80),
+        ]); 
 
         // Save product in the DB
         $user->save();
@@ -62,6 +123,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
+        $header = $request->header('api_token');
         //
         // Se busca el usuario en tabla 
         // Handler
@@ -90,6 +152,7 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, $id)
     {
+        $header = $request->header('api_token');
         // Se busca el usuario en la tabla
         $user = user::findOrFail($id);
         // Se obtienen los datos del JSON anidado
@@ -112,6 +175,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        $header = $request->header('api_token');
         //
         $userToDestroy = User::findOrFail($id);
         $userToDestroy->delete();

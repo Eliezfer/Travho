@@ -7,6 +7,9 @@ use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\UserCollection;
+use App\Http\Requests\UserRequest;
+use Illuminate\Support\Str;
 
 class RegisterController extends Controller
 {
@@ -64,13 +67,28 @@ class RegisterController extends Controller
 
         // Colocar modelo
         // Quitar fecha de nacimiento
-    protected function create(array $data)
+    protected function create(UserRequest $request)
     {
-        return User::create([
-            'name' => $data['name'],
+        // Get data from JSON
+        $data = $request['data'];
+        
+        // Generate Token API
+
+        // Create a new product
+        // PASSWORD 
+        $user = User::create([
+           'name' => $data['name'],
+            'user' => $data['user'],
+            'password' => $data['password'],
+            'cellphone' => $data['cellphone'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'api_token' => Str::random(),
-        ]);
+            'birthdate' => $data['birthdate'],
+            'api_token' => Str::random(80),
+        ]); 
+
+        // Save product in the DB
+        $user->save();
+        //Return the JSON with specific Structure
+        return new UserResource($user);
     }
 }
