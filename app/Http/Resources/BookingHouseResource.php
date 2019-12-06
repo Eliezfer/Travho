@@ -15,13 +15,13 @@ class BookingHouseResource extends JsonResource
     public function toArray($request)
     {
         return [
-            /*'type' => 'bookings house',
+            'type' => 'bookings house',
             'id' => $this->id,
             'user_id' => $this
             
-            'attributes' => [
+            //'attributes' => [
 
-            ]*/
+            //]
         ];
     }
 }

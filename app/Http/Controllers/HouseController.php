@@ -8,6 +8,7 @@ use App\User;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\HouseRequest;
+use Response;
 
 use App\Http\Resources\House as HouseResource;
 use App\Http\Resources\HouseCollection;
@@ -20,7 +21,9 @@ class HouseController extends Controller
      */
     public function index()
     {
-        $houses=House::get();
+        $houses=House::orderBy('id','DESC')
+        ->where('status','true')
+        ->paginate(10);
         return new HouseCollection($houses);
     }
 
@@ -42,15 +45,16 @@ class HouseController extends Controller
      */
     public function store(HouseRequest $request)
     {
-       $data_address=$request['address'];
-       $data_house=$request['data'];
-       $address=Address::create($data_address);
-       $data_house["address_id"]=$address['id'];
-       //Esto se cambia con la validacion de token para saber el id del usuario
-       $user=User::findorfail(1);
-       //blabla
-       $data_house["user_id"]=1;
-       $house=House::create($data_house);
+        $this->middleware('auth:api');
+
+        $data_address=$request['address'];
+        $address=Address::create($data_address);
+        $data_house["address_id"]=$address['id'];
+
+        $data_house=$request['data'];
+        $data_house["user_id"]=auth()->user()->id;
+        $house=House::create($data_house);
+
         return new HouseResource($house);
     }
 
@@ -60,9 +64,8 @@ class HouseController extends Controller
      * @param  \App\House  $house
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(House $house)
     {
-        $house=House::findorfail($id);
         return new HouseResource($house);
     }
 
@@ -85,8 +88,9 @@ class HouseController extends Controller
      * @param  \App\House  $house
      * @return \Illuminate\Http\Response
      */
-    public function update($id,HouseRequest $request)
+    public function update(House $house,HouseRequest $request)
     {
+
         $data_address=$request['address'];
         $data_house=$request['data'];
 
