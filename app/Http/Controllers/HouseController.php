@@ -11,6 +11,7 @@ use App\Http\Requests\HouseRequest;
 
 use App\Http\Resources\House as HouseResource;
 use App\Http\Resources\HouseCollection;
+use Facade\Ignition\QueryRecorder\Query;
 use Illuminate\Support\Collection;
 
 class HouseController extends Controller
@@ -24,20 +25,26 @@ class HouseController extends Controller
     {
         $query=$request->query();
         if(empty($query)){
-            $houses=House::get();
+            $houses=House::orderBy('id','DESC')
+            ->where('status','true')
+            ->paginate(10);
             return new HouseCollection($houses);
 
         }
-        //$houses=House::select('address_id')->get();
-        $address=Address::select('id')->where('state','=','yucatan')->get();
+
+        $address=Address::select('id')->where('state','=',$query['Estate'])->get();
+        $houses=[];
+        //Encuentra las casas en el estado
         foreach($address as $add){
-            $houses[]=House::findOrfail($add['id']);
+           $house=House::findOrfail($add['id']);
+           if($house['status']){
+             $houses[]=$house;
+           }
         }
+
 
         $housesCollection=Collection::make($houses);
         return new HouseCollection($housesCollection);
-
-        //return $houses;
     }
 
     /**
@@ -58,16 +65,18 @@ class HouseController extends Controller
      */
     public function store(HouseRequest $request)
     {
-       $data_address=$request['address'];
-       $data_house=$request['data'];
-       $address=Address::create($data_address);
-       $data_house["address_id"]=$address['id'];
-       //Esto se cambia con la validacion de token para saber el id del usuario
-       $user=User::findorfail(1);
-       //bla bla
-       $data_house["user_id"]=1;
-       $house=House::create($data_house);
-       return new HouseResource($house);
+        //verifica que este autenticado
+        $this->middleware('auth:api');
+
+        $data_address=$request['address'];
+        $address=Address::create($data_address);
+        $data_house["address_id"]=$address['id'];
+
+        $data_house=$request['data'];
+        $data_house["user_id"]=auth()->user()->id;
+        $house=House::create($data_house);
+
+        return new HouseResource($house);
     }
 
     /**
@@ -76,9 +85,8 @@ class HouseController extends Controller
      * @param  \App\House  $house
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(House $house)
     {
-        $house=House::findorfail($id);
         return new HouseResource($house);
     }
 
@@ -101,12 +109,11 @@ class HouseController extends Controller
      * @param  \App\House  $house
      * @return \Illuminate\Http\Response
      */
-    public function update($id,HouseRequest $request)
+    public function update(House $house,HouseRequest $request)
     {
+
         $data_address=$request['address'];
         $data_house=$request['data'];
-
-        $house=House::findorfail($id);
 
         $address=Address::findorfail($house['address_id']);
         $house->update($data_house);

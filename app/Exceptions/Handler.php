@@ -67,6 +67,16 @@ class Handler extends ExceptionHandler
             ];
             return Response::json(['errors' =>$json], JsonResponse::HTTP_FORBIDDEN);
         }
+        if ($exception instanceof AuthenticationException) {
+            $json = [
+                'code' => 'ERROR-4',
+                'title' =>'UNAUTHORIZED',
+                'message' => 'Consulte Autenticación de acceso básica y Autenticación de acceso resumido'
+            ];
+            return Response::json(['message' =>$json], JsonResponse::HTTP_UNAUTHORIZED);
+            
+        
+        }
         
         return parent::render($request, $exception);
 

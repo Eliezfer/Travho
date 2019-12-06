@@ -121,7 +121,7 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request,$id)
     {
          // $header = $request->header('api_token');
         //
@@ -173,7 +173,7 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy($request,$id)
+    public function destroy(Request $request,$id,User $user)
     {
         $header = $request->header('api_token');
         $userToDestroy = User::findOrFail($id);
