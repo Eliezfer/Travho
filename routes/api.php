@@ -38,8 +38,8 @@ Route::get('bookings/{bookingHouse}', 'BookingHouseController@show');
 Route::put('booking/{bookingHouse}', 'BookingHouseController@update');
 Route::get('/houses','HouseController@index'); //'implementar el filtrado con query buider
 Route::post('/houses', 'HouseController@store');
-Route::get('/houses/{id}','HouseController@show');
-Route::put('/houses/{id}', 'HouseController@update');
+Route::get('/houses/{house}','HouseController@show');
+Route::put('/houses/{house}', 'HouseController@update');
 
 // Returns the list of registered users
 Route::GET('users', "UserController@index");
