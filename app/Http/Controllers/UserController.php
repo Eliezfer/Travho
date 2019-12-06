@@ -20,14 +20,14 @@ class UserController extends Controller
     // }
     /**
      *  User login
-     * 
+     *
      */
     public function login(Request $request){
         $data = $request['data'];
         // Se filtra por email
         $user = User::where('email', $data['email'])->first();
 
-        // Se verifica el email y el password 
+        // Se verifica el email y el password
         if($user && ($data['password'] == $user->password )){
             return response()->json([
                 'data' => [
@@ -38,18 +38,18 @@ class UserController extends Controller
                 ]
             ], 200);
         }else{
-            // Mensaje de error 
+            // Mensaje de error
             return response()->json(["error" => "No content"],406);
         }
-                
+
 
     }
- 
+
     public function logout(Request $request){
         $data = $request['data'];
         // Se filtra por email
         $user = User::where('email', $data['email'])->first();
-        // Se verifica el email y el password 
+        // Se verifica el email y el password
         if($user && ($data['password'] == $user->password )){
             $data = [Str::random(80)];
             $user->update($data);
@@ -61,7 +61,7 @@ class UserController extends Controller
     }
 
     /**
-     * 
+     *
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -94,11 +94,11 @@ class UserController extends Controller
     {
         // Get data from JSON
         $data = $request['data'];
-        
+
         // Generate Token API
 
         // Create a new product
-        // PASSWORD 
+        // PASSWORD
         $user = User::create([
            'name' => $data['name'],
             'user' => $data['user'],
@@ -107,7 +107,7 @@ class UserController extends Controller
             'email' => $data['email'],
             'birthdate' => $data['birthdate'],
             'api_token' => Str::random(80),
-        ]); 
+        ]);
 
         // Save product in the DB
         $user->save();
@@ -121,11 +121,11 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request,$id)
     {
         $header = $request->header('api_token');
         //
-        // Se busca el usuario en tabla 
+        // Se busca el usuario en tabla
         // Handler
         $user = user::findOrFail($id);
         // Se retorna el usuario solicitado, con la representación adecuada
@@ -159,7 +159,7 @@ class UserController extends Controller
         $data = $request['data'];
         // Se guarda el user actualizado
         $user->update($data);
-        
+
         // Se retorna el user modificado, con el status 200 (OK)
         // return response()->json($user,200);
 
@@ -173,7 +173,7 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(Request $request,$id,User $user)
     {
         $header = $request->header('api_token');
         //

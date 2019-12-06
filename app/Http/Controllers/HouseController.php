@@ -8,7 +8,6 @@ use App\User;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\HouseRequest;
-use Response;
 
 use App\Http\Resources\House as HouseResource;
 use App\Http\Resources\HouseCollection;
@@ -93,8 +92,6 @@ class HouseController extends Controller
 
         $data_address=$request['address'];
         $data_house=$request['data'];
-
-        $house=House::findorfail($id);
 
         $address=Address::findorfail($house['address_id']);
         $house->update($data_house);
