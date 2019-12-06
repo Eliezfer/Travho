@@ -43,7 +43,7 @@ Route::put('/houses/{id}', 'HouseController@update');
 Route::POST('users/login', 'UserController@login');
 
 // Logout
-Route::POST('users/logout', 'UserController@logout');
+Route::POST('users/logout', 'UserController@logout')->middleware('auth');
 
 // Returns the list of registered users
 //Route::GET('users', "UserController@index")->middleware('auth');
@@ -52,11 +52,11 @@ Route::POST('users/logout', 'UserController@logout');
 Route::POST('users', "UserController@store")->middleware('auth');
 
 // Return a User by ID
-Route::GET('users/{id}', "UserController@show");
+Route::GET('users/{user}', "UserController@show");
 
 // Update user by ID
-Route::PUT('users/{id}', "UserController@update");
+Route::PUT('users/{user}', "UserController@update")->middleware('auth');
 
 // Delete a user
-Route::DELETE('users/{id}', "UserController@destroy");
+Route::DELETE('users/{user}', "UserController@destroy")->middleware('auth');
 
