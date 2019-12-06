@@ -26,6 +26,7 @@ class UserCollection extends ResourceCollection
                     'date'      => $this->date, // 1/05/1998
                     'teléfono'  => $this->cellphone,
                     'correo'    => $this->email,
+                    //'api_token' => $this->api_token
                     ],
                 'link' =>[
                     'self' => "https://".$URL."/api/products/".$this->id

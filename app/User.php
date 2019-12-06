@@ -18,10 +18,12 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'user',
-        'password',
+        'password', // Quitar USER::CREATE(QUITAR PASSWORD)
         'cellphone',  
         'email',  
         'birthdate',
+        'api_token'
+        
     ];
 
     /**
@@ -30,7 +32,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'api_token'
     ];
 
     /**
