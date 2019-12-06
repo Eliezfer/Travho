@@ -45,7 +45,7 @@ class UserController extends Controller
         $data = $request['data'];
 
         // Create a new product
-        // PASSWORD 
+        // PASSWORD
         $user = User::create($data);
 
         // Save product in the DB
@@ -63,7 +63,7 @@ class UserController extends Controller
     public function show($id)
     {
         //
-        // Se busca el usuario en tabla 
+        // Se busca el usuario en tabla
         // Handler
         $user = user::findOrFail($id);
         // Se retorna el usuario solicitado, con la representación adecuada
@@ -96,7 +96,7 @@ class UserController extends Controller
         $data = $request['data'];
         // Se guarda el user actualizado
         $user->update($data);
-        
+
         // Se retorna el user modificado, con el status 200 (OK)
         // return response()->json($user,200);
 
@@ -110,7 +110,7 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy($id)
     {
         //
         $userToDestroy = User::findOrFail($id);
