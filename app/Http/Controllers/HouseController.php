@@ -8,7 +8,7 @@ use App\User;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\HouseRequest;
-
+use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\House as HouseResource;
 use App\Http\Resources\HouseCollection;
 use Facade\Ignition\QueryRecorder\Query;
@@ -24,28 +24,40 @@ class HouseController extends Controller
     public function index(Request $request)
     {
         $query=$request->query();
-        if(empty($query)){
+
+        if($request->query('Estate', 'false')!='false'){
+
+            $address=Address::select('id')->where('state','=',$query['Estate'])->get();
+
+            $houses=[];
+            //Encuentra las casas en el estado
+            foreach($address as $add){
+                $house=House::find($add['id']);
+                if($house['status']){
+                    $houses[]=$house;
+                }
+            }
+
+            $housesCollection=Collection::make($houses);
+            return new HouseCollection($housesCollection);
+        }
+
+        if($request->query('page', 'false')!='false'){
             $houses=House::orderBy('id','DESC')
             ->where('status','true')
             ->paginate(10);
             return new HouseCollection($houses);
-
         }
 
-        $address=Address::select('id')->where('state','=',$query['Estate'])->get();
-        $houses=[];
-        //Encuentra las casas en el estado
-        foreach($address as $add){
-           $house=House::findOrfail($add['id']);
-           if($house['status']){
-             $houses[]=$house;
-           }
-        }
+        $houses=House::orderBy('id','DESC')
+        ->where('status','true')
+        ->paginate(10);
+        return new HouseCollection($houses);
 
+        return $query;
 
-        $housesCollection=Collection::make($houses);
-        return new HouseCollection($housesCollection);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -66,14 +78,16 @@ class HouseController extends Controller
     public function store(HouseRequest $request)
     {
         //verifica que este autenticado
-        $this->middleware('auth:api');
+       // $this->middleware('auth::api');
 
         $data_address=$request['address'];
-        $address=Address::create($data_address);
-        $data_house["address_id"]=$address['id'];
+
 
         $data_house=$request['data'];
-        $data_house["user_id"]=auth()->user()->id;
+        $address=Address::create($data_address);
+        $data_house["address_id"]=$address['id'];
+       //$data_house["user_id"]=Auth::user();
+        $data_house["user_id"]='1';
         $house=House::create($data_house);
 
         return new HouseResource($house);
@@ -111,6 +125,8 @@ class HouseController extends Controller
      */
     public function update(House $house,HouseRequest $request)
     {
+      //verifica que este autenticado
+         $this->middleware('auth:api');
 
         $data_address=$request['address'];
         $data_house=$request['data'];

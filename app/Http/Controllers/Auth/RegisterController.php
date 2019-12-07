@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\UserCollection;
+use App\Http\Resources\User as UserResource;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Str;
 
@@ -71,11 +72,11 @@ class RegisterController extends Controller
     {
         // Get data from JSON
         $data = $request['data'];
-        
+
         // Generate Token API
 
         // Create a new product
-        // PASSWORD 
+        // PASSWORD
         $user = User::create([
            'name' => $data['name'],
             'user' => $data['user'],
@@ -84,7 +85,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'birthdate' => $data['birthdate'],
             'api_token' => Str::random(80),
-        ]); 
+        ]);
 
         // Save product in the DB
         $user->save();
