@@ -15,7 +15,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        // 'App\Model' => 'App\Policies\ModelPolicy',
+      //   'App\Model' => 'App\Policies\ModelPolicy',
         BookingHouse::class => BookingHousePolicy::class,
     ];
 
@@ -29,7 +29,6 @@ class AuthServiceProvider extends ServiceProvider
        
     //  $this->app['auth']->viaRequest('api', function ($request){
     //     if($request->header('api_token')){
-    //        // dd($request->header('api_token'));
     //         return User::where('api_token', $request->header('api_token'))->first();
     //     }
     //  });

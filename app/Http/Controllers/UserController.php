@@ -130,7 +130,7 @@ class UserController extends Controller
         //
         // Se busca el usuario en tabla 
         // Handler
-       // $user = user::findOrFail($id);
+         //$user = user::findOrFail($id);
         // Se retorna el usuario solicitado, con la representación adecuada
         return new UserResource($user);
     }
@@ -157,12 +157,11 @@ class UserController extends Controller
     {
         //$this->middleware('auth:api');
         // Solamente el usuario puede actualizar su información [Policies]
-        $header = $request->header('api_token');
+        //$header = $request->header('api_token');
         // Se busca el usuario en la tabla
       // $user = user::findOrFail($id);
         // Se obtienen los datos del JSON anidado
         $data = $request['data'];
-        //return $header;
         
         $filter = [
             "name" => $data['name'],
