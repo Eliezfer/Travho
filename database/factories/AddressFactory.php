@@ -8,9 +8,6 @@ use Illuminate\Support\Str;
 $factory->define(Address::class, function (Faker $faker) {
     return [
         //
-        'country'=> $faker->country,
-        'state' => $faker->state,
-        'municipality' => 'merida',
         'street' => $faker->streetName,
         'cross_street1'=>$faker->streetName,
         'cross_street2'=>$faker->streetName,
