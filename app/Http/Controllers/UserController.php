@@ -49,12 +49,26 @@ class UserController extends Controller
         $data = $request['data'];
         // Se filtra por email
         $user = User::where('email', $data['email'])->first();
+<<<<<<< HEAD
         // Se verifica el email y el password
+=======
+        
+        // Solamente el usuario puede cerrar su sesión
+
+        $this->authorize('logout',$user);
+
+       
+        // Se verifica el email y el password 
+>>>>>>> e46f3206262130fd92286b129229cc1780c73757
         if($user && ($data['password'] == $user->password )){
-            $data = [Str::random(80)];
+            
+            $data = [
+             'api_token'  =>  Str::random(80),
+            ];
             $user->update($data);
             return response()->json([
-                "Logout"
+                "Sesión: " => "Logout",
+                "api_token" => $user->api_token,
             ], 200);
         }
 
@@ -155,6 +169,7 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, User $user)
     {
+        $this->authorize('update',$user);
         //$this->middleware('auth:api');
         // Solamente el usuario puede actualizar su información [Policies]
         //$header = $request->header('api_token');
@@ -188,6 +203,7 @@ class UserController extends Controller
      */
     public function destroy(Request $request,$id,User $user)
     {
+        $this->authorize('delete',$user);
        // $header = $request->header('api_token');
         // Solamente el mismo usuario puede destruir su usuario
         //$userToDestroy = User::findOrFail($id);
