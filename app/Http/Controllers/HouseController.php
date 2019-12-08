@@ -71,14 +71,15 @@ class HouseController extends Controller
     public function store(HouseRequest $request)
     {
         //verifica que este autenticado
-       // $this->middleware('auth::api');
+
 
         $data_address=$request['address'];
 
         $data_house=$request['data'];
         $address=Address::create($data_address);
         $data_house["address_id"]=$address['id'];
-       //$data_house["user_id"]=Auth::user();
+
+       //obtener la id del usuario mediante su autenticación
         $data_house["user_id"]='1';
         $house=House::create($data_house);
 
