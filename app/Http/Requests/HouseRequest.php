@@ -30,10 +30,10 @@ class HouseRequest extends FormRequest
             'data.description'=>'required',
             'data.price_for_day'=>'numeric|gt:0|required',
             'data.status'=>'required',
+            'data.country'=>'required',
+            'data.state'=>'required',
+            'data.municipality'=>'required',
 
-            'address.country'=>'required',
-            'address.state'=>'required',
-            'address.municipality'=>'required',
             'address.street'=>'required',
             'address.cross_street1'=>'required',
             'address.cross_street2'=>'required',

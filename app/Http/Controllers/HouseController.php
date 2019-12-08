@@ -24,12 +24,11 @@ class HouseController extends Controller
     public function index(Request $request)
     {
         $query=$request->query();
-
+        //verifica que la variable Estate este presente
         if($request->query('Estate', 'false')!='false'){
 
-            $address=Address::select('id')->where('state','=',$query['Estate'])->get();
+            $address=Address::select('id')->orderBy('id','DESC')->where('state','=',$query['Estate']);;
 
-            $houses=[];
             //Encuentra las casas en el estado
             foreach($address as $add){
                 $house=House::find($add['id']);
@@ -37,18 +36,18 @@ class HouseController extends Controller
                     $houses[]=$house;
                 }
             }
+           $housesCollection=Collection::make($houses);
 
-            $housesCollection=Collection::make($houses);
             return new HouseCollection($housesCollection);
         }
-
+        //verifica que la variable de paginación este presente
         if($request->query('page', 'false')!='false'){
             $houses=House::orderBy('id','DESC')
             ->where('status','true')
             ->paginate(10);
             return new HouseCollection($houses);
         }
-
+        //retorna la primera pagina
         $houses=House::orderBy('id','DESC')
         ->where('status','true')
         ->paginate(10);

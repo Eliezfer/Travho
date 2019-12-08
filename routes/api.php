@@ -39,7 +39,7 @@ Route::get('/houses','HouseController@index'); //'implementar el filtrado con qu
 Route::post('/houses', 'HouseController@store');
 Route::get('/houses/{house}','HouseController@show');
 Route::put('/houses/{house}', 'HouseController@update');
-
+Route::delete('houses/{house}');
 // Login
 Route::POST('users/login', 'UserController@login');
 

@@ -8,7 +8,7 @@ class House extends Model
 {
     /*Definición de atributos para asignación masiva*/
     protected $fillable = [
-        'address_id','user_id','description','price_for_day','status',
+        'country','state','municipality','address_id','user_id','description','price_for_day','status',
     ];
 
 
