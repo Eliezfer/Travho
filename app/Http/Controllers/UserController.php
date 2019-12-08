@@ -92,6 +92,7 @@ class UserController extends Controller
      */
     protected function store(UserRequest $request)
     {
+
         // Get data from JSON
         $data = $request['data'];
 
@@ -121,13 +122,15 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request,$id)
+    public function show(User $user)
     {
-         // $header = $request->header('api_token');
+
+        //
+        //$header = $request->header('api_token');
         //
         // Se busca el usuario en tabla
         // Handler
-        $user = user::findOrFail($id);
+         //$user = user::findOrFail($id);
         // Se retorna el usuario solicitado, con la representación adecuada
         return new UserResource($user);
     }
@@ -150,15 +153,25 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(UserRequest $request, $id)
+    public function update(UserRequest $request, User $user)
     {
-        $header = $request->header('api_token');
+        //$this->middleware('auth:api');
+        // Solamente el usuario puede actualizar su información [Policies]
+        //$header = $request->header('api_token');
         // Se busca el usuario en la tabla
-        $user = user::findOrFail($id);
+      // $user = user::findOrFail($id);
         // Se obtienen los datos del JSON anidado
         $data = $request['data'];
+
+        $filter = [
+            "name" => $data['name'],
+            "user" => $data['user'],
+            "password" => $data['password'],
+            "cellphone" => $data['cellphone'],
+            "birthdate" => $data['birthdate']
+        ];
         // Se guarda el user actualizado
-        $user->update($data);
+        $user->update($filter);
 
         // Se retorna el user modificado, con el status 200 (OK)
         // return response()->json($user,200);
@@ -175,8 +188,10 @@ class UserController extends Controller
      */
     public function destroy(Request $request,$id,User $user)
     {
-        $header = $request->header('api_token');
-        $userToDestroy = User::findOrFail($id);
+       // $header = $request->header('api_token');
+        // Solamente el mismo usuario puede destruir su usuario
+        //$userToDestroy = User::findOrFail($id);
+        $user->delete();
         return response(null,204);
     }
 
