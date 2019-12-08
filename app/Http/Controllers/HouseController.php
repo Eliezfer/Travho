@@ -33,22 +33,11 @@ class HouseController extends Controller
             $houses->withPath('/houses?state='.$query['state']);
             return new HouseCollection($houses);
         }
-
-        //verifica que la variable de paginación este presente
-        if($request->query('page', 'false')!='false'){
-            $houses=House::orderBy('id','DESC')
-            ->where('status','true')
-            ->paginate(10);
-            return new HouseCollection($houses);
-        }
         //retorna la primera pagina
         $houses=House::orderBy('id','DESC')
         ->where('status','true')
         ->paginate(10);
         return new HouseCollection($houses);
-
-        return $query;
-
     }
 
 
