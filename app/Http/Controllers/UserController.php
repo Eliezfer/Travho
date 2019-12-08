@@ -92,6 +92,7 @@ class UserController extends Controller
      */
     protected function store(UserRequest $request)
     {
+        
         // Get data from JSON
         $data = $request['data'];
         
@@ -153,13 +154,15 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, User $user)
     {
+        //$this->middleware('auth:api');
         // Solamente el usuario puede actualizar su información [Policies]
-        //$header = $request->header('api_token');
+        $header = $request->header('api_token');
         // Se busca el usuario en la tabla
       // $user = user::findOrFail($id);
         // Se obtienen los datos del JSON anidado
         $data = $request['data'];
-        //dd($data);
+        //return $header;
+        
         $filter = [
             "name" => $data['name'],
             "user" => $data['user'],
