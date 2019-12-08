@@ -124,8 +124,9 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        
         // 
-      //  $header = $request->header('api_token');
+        //$header = $request->header('api_token');
         //
         // Se busca el usuario en tabla 
         // Handler

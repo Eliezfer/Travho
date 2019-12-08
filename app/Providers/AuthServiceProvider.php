@@ -26,13 +26,13 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->registerPolicies();
+       
     //  $this->app['auth']->viaRequest('api', function ($request){
     //     if($request->header('api_token')){
-    //         dd($request->header('api_token'));
+    //        // dd($request->header('api_token'));
     //         return User::where('api_token', $request->header('api_token'))->first();
     //     }
     //  });
-        //
+     $this->registerPolicies();
     }
 }

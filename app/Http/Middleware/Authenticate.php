@@ -19,7 +19,7 @@ class Authenticate extends Middleware
     {
         if (! $request->expectsJson()) {
             
-            throw new AuthenticationException();
+           throw new AuthenticationException();
         
         }
     }

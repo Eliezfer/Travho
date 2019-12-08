@@ -49,10 +49,10 @@ Route::POST('users/logout', 'UserController@logout')->middleware('auth');
 //Route::GET('users', "UserController@index")->middleware('auth');
 
 // Create a user
-Route::POST('users', "UserController@store")->middleware('auth');
-
+Route::POST('users', "UserController@store");
 // Return a User by ID
-Route::GET('users/{user}', "UserController@show");
+Route::GET('users/{user}', "UserController@show")->middleware('auth');
+
 
 // Update user by ID
 Route::PUT('users/{user}', "UserController@update")->middleware('auth');
