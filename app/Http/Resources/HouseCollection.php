@@ -17,7 +17,6 @@ class HouseCollection extends ResourceCollection
         $this->collection->transform(function (House $House) {
             return (new HouseResource($House));
         });
-
         return $this->collection;
     }
 }

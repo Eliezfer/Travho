@@ -20,6 +20,7 @@ class House extends JsonResource
         return [
             'id'=>$this->id,
             'id_user'=>$this->user['id'],
+
             'data'=>[
                 'description'=>$this->description,
                 'price_for_day'=>$this->price_for_day,
@@ -52,6 +53,7 @@ class House extends JsonResource
                     'self'=>config('app.url').'/api/user/'.$this->user['id'],
                 ]
             ]
+
         ];
     }
 }

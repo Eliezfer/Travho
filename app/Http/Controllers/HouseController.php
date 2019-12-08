@@ -25,21 +25,15 @@ class HouseController extends Controller
     {
         $query=$request->query();
         //verifica que la variable Estate este presente
-        if($request->query('Estate', 'false')!='false'){
-
-            $address=Address::select('id')->orderBy('id','DESC')->where('state','=',$query['Estate']);;
-
-            //Encuentra las casas en el estado
-            foreach($address as $add){
-                $house=House::find($add['id']);
-                if($house['status']){
-                    $houses[]=$house;
-                }
-            }
-           $housesCollection=Collection::make($houses);
-
-            return new HouseCollection($housesCollection);
+        if($request->query('state', 'false')!='false'){
+            $houses=House::orderBy('id','DESC')
+            ->where('status','true')->where('state',$query['state'])
+            ->paginate(10);
+            //asigna el path con el state actual
+            $houses->withPath('/houses?state='.$query['state']);
+            return new HouseCollection($houses);
         }
+
         //verifica que la variable de paginación este presente
         if($request->query('page', 'false')!='false'){
             $houses=House::orderBy('id','DESC')
@@ -80,7 +74,6 @@ class HouseController extends Controller
        // $this->middleware('auth::api');
 
         $data_address=$request['address'];
-
 
         $data_house=$request['data'];
         $address=Address::create($data_address);
