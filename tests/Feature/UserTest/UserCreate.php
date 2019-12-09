@@ -7,7 +7,7 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-//use Illumintae\Foundation\Http\FormRequest;
+use Illumintae\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Validator;
 
 class UserTest extends TestCase

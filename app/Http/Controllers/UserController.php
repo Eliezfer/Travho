@@ -9,7 +9,7 @@ use App\Http\Resources\UserCollection;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Str;
 use Illuminate\Auth\AuthenticationException;
-
+use App\Http\Requests\AuthRequest;
 
 class UserController extends Controller
 {
@@ -22,7 +22,7 @@ class UserController extends Controller
      *  User login
      *
      */
-    public function login(Request $request){
+    public function login(AuthRequest $request){
         $data = $request['data'];
         // Se filtra por email
         $user = User::where('email', $data['email'])->first();
@@ -37,6 +37,12 @@ class UserController extends Controller
                 'api_token' => $user->api_token
                 ]
             ], 200);
+<<<<<<< HEAD
+        }
+    }
+ 
+    public function logout(AuthRequest $request){
+=======
         }else{
             // Mensaje de error
             return response()->json(["error" => "No content"],406);
@@ -46,6 +52,7 @@ class UserController extends Controller
     }
 
     public function logout(Request $request){
+>>>>>>> 98b1d4c278b5530b58114bfdda282e8c179fcd54
         $data = $request['data'];
         // Se filtra por email
         $user = User::where('email', $data['email'])->first();

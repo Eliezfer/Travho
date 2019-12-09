@@ -2,11 +2,7 @@
 
 namespace App\Http\Middleware;
 
-<<<<<<< HEAD
-
-=======
-//use Response;
->>>>>>> develop
+use Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Auth\AuthenticationException;
@@ -21,17 +17,11 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
-<<<<<<< HEAD
-        if (! $request->expectsJson()) {
-
-            throw new AuthenticationException();
-=======
-
+       
         if ( !$request->expectsJson()) {
-
+           
            throw new AuthenticationException();
->>>>>>> develop
-
+        
         }
     }
 }

@@ -19,11 +19,11 @@ class User extends Authenticatable
         'name',
         'user',
         'password', // Quitar USER::CREATE(QUITAR PASSWORD)
-        'cellphone',
-        'email',
+        'cellphone',  
+        'email',  
         'birthdate',
         'api_token'
-
+        
     ];
 
     /**
