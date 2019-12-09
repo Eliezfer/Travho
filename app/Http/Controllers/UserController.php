@@ -37,28 +37,13 @@ class UserController extends Controller
                 'api_token' => $user->api_token
                 ]
             ], 200);
-<<<<<<< HEAD
         }
     }
  
     public function logout(AuthRequest $request){
-=======
-        }else{
-            // Mensaje de error
-            return response()->json(["error" => "No content"],406);
-        }
-
-
-    }
-
-    public function logout(Request $request){
->>>>>>> 98b1d4c278b5530b58114bfdda282e8c179fcd54
         $data = $request['data'];
         // Se filtra por email
         $user = User::where('email', $data['email'])->first();
-<<<<<<< HEAD
-        // Se verifica el email y el password
-=======
         
         // Solamente el usuario puede cerrar su sesión
 
@@ -66,7 +51,6 @@ class UserController extends Controller
 
        
         // Se verifica el email y el password 
->>>>>>> e46f3206262130fd92286b129229cc1780c73757
         if($user && ($data['password'] == $user->password )){
             
             $data = [

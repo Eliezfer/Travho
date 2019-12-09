@@ -28,7 +28,7 @@ class UserRequest extends FormRequest
                 "title" => "Unprocessable Entity",
                 "messages" => $errors
             ]]
-        ] ,422)); 
+        ] ,422));
     }
 
     /**
