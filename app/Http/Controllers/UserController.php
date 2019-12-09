@@ -20,14 +20,14 @@ class UserController extends Controller
     // }
     /**
      *  User login
-     * 
+     *
      */
     public function login(AuthRequest $request){
         $data = $request['data'];
         // Se filtra por email
         $user = User::where('email', $data['email'])->first();
 
-        // Se verifica el email y el password 
+        // Se verifica el email y el password
         if($user && ($data['password'] == $user->password )){
             return response()->json([
                 'data' => [
@@ -37,13 +37,28 @@ class UserController extends Controller
                 'api_token' => $user->api_token
                 ]
             ], 200);
+<<<<<<< HEAD
         }
     }
  
     public function logout(AuthRequest $request){
+=======
+        }else{
+            // Mensaje de error
+            return response()->json(["error" => "No content"],406);
+        }
+
+
+    }
+
+    public function logout(Request $request){
+>>>>>>> 98b1d4c278b5530b58114bfdda282e8c179fcd54
         $data = $request['data'];
         // Se filtra por email
         $user = User::where('email', $data['email'])->first();
+<<<<<<< HEAD
+        // Se verifica el email y el password
+=======
         
         // Solamente el usuario puede cerrar su sesión
 
@@ -51,6 +66,7 @@ class UserController extends Controller
 
        
         // Se verifica el email y el password 
+>>>>>>> e46f3206262130fd92286b129229cc1780c73757
         if($user && ($data['password'] == $user->password )){
             
             $data = [
@@ -66,7 +82,7 @@ class UserController extends Controller
     }
 
     /**
-     * 
+     *
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -97,14 +113,14 @@ class UserController extends Controller
      */
     protected function store(UserRequest $request)
     {
-        
+
         // Get data from JSON
         $data = $request['data'];
-        
+
         // Generate Token API
 
         // Create a new product
-        // PASSWORD 
+        // PASSWORD
         $user = User::create([
            'name' => $data['name'],
             'user' => $data['user'],
@@ -113,7 +129,7 @@ class UserController extends Controller
             'email' => $data['email'],
             'birthdate' => $data['birthdate'],
             'api_token' => Str::random(80),
-        ]); 
+        ]);
 
         // Save product in the DB
         $user->save();
@@ -129,11 +145,11 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        
-        // 
+
+        //
         //$header = $request->header('api_token');
         //
-        // Se busca el usuario en tabla 
+        // Se busca el usuario en tabla
         // Handler
          //$user = user::findOrFail($id);
         // Se retorna el usuario solicitado, con la representación adecuada
@@ -168,7 +184,7 @@ class UserController extends Controller
       // $user = user::findOrFail($id);
         // Se obtienen los datos del JSON anidado
         $data = $request['data'];
-        
+
         $filter = [
             "name" => $data['name'],
             "user" => $data['user'],
@@ -178,7 +194,7 @@ class UserController extends Controller
         ];
         // Se guarda el user actualizado
         $user->update($filter);
-        
+
         // Se retorna el user modificado, con el status 200 (OK)
         // return response()->json($user,200);
 
@@ -192,13 +208,14 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(Request $request,$id,User $user)
     {
         $this->authorize('delete',$user);
        // $header = $request->header('api_token');
         // Solamente el mismo usuario puede destruir su usuario
         //$userToDestroy = User::findOrFail($id);
-        $userToDestroy->delete();
+        $user->delete();
         return response(null,204);
     }
+
 }
