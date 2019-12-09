@@ -110,7 +110,8 @@ class HouseController extends Controller
     public function update(House $house,HouseRequest $request)
     {
       //verifica que este autenticado
-         $this->middleware('auth:api');
+
+        $this->authorize('logout',$house);
         $data_address=$request['address'];
         $data_house=$request['data'];
 

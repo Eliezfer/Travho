@@ -74,10 +74,10 @@ class Handler extends ExceptionHandler
                 'message' => 'Consulte Autenticación de acceso básica y Autenticación de acceso resumido'
             ];
             return Response::json(['message' =>$json], JsonResponse::HTTP_UNAUTHORIZED);
-            
-        
+
+
         }
-        
+
         return parent::render($request, $exception);
 
     }

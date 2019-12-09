@@ -37,22 +37,10 @@ class UserController extends Controller
                 'api_token' => $user->api_token
                 ]
             ], 200);
-<<<<<<< HEAD
         }
     }
- 
+
     public function logout(AuthRequest $request){
-=======
-        }else{
-            // Mensaje de error
-            return response()->json(["error" => "No content"],406);
-        }
-
-
-    }
-
-    public function logout(Request $request){
->>>>>>> 98b1d4c278b5530b58114bfdda282e8c179fcd54
         $data = $request['data'];
         // Se filtra por email
         $user = User::where('email', $data['email'])->first();
