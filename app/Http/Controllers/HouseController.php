@@ -112,7 +112,7 @@ class HouseController extends Controller
     {
       //verifica que este autenticado
 
-        $this->authorize('logout',$house);
+        $this->authorize('update',$house);
         $data_address=$request['address'];
         $data_house=$request['data'];
 
