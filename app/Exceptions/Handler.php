@@ -60,10 +60,11 @@ class Handler extends ExceptionHandler
             return Response::json(['errors' =>$json], JsonResponse::HTTP_NOT_FOUND);
         }
         if ($exception instanceof AuthorizationException) {
+            $error = $exception->getMessage();
             $json = [
                 'code' => 'ERROR-3',
                 'title' =>'FORBIDDEN',
-                'message' => 'Usted no tiene permisos para esta acción'
+                'message' => $error
             ];
             return Response::json(['errors' =>$json], JsonResponse::HTTP_FORBIDDEN);
         }

@@ -5,7 +5,8 @@ namespace App\Policies;
 use App\BookingHouse;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-
+use App\House;
+use Illuminate\Auth\Access\Response;
 
 class BookingHousePolicy
 {
@@ -41,10 +42,12 @@ class BookingHousePolicy
      * @param  \App\User  $user
      * @return mixed
      */
-    public function create(User $user)
+    public function create(User $user, $house)
     {
-        //
-        return true;
+        
+        return $user->id != $house->user_id
+                ? Response::allow()
+                : Response::deny('Acción no autorizada, no puede rentar su propia casa');
     }
 
     /**
@@ -58,7 +61,7 @@ class BookingHousePolicy
     {
         //
 
-        return $user->id == $bookingHouse->user_id;
+        return $user->id == $bookingHouse->user_id ;
     }
 
     /**

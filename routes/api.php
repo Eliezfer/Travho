@@ -28,12 +28,14 @@ Route::get('bookings', 'BookingHouseController@index');
 /**
  * Get a booking
  */
-Route::get('bookings/{bookingHouse}', 'BookingHouseController@show');
+Route::get('bookings/{bookingHouse}', 'BookingHouseController@show')->name('bookings');;
 
 /**
  * Edit a booking
  */
-Route::put('booking/{bookingHouse}', 'BookingHouseController@update');
+Route::put('bookings/{bookingHouse}', 'BookingHouseController@update');
+
+
 Route::get('/houses','HouseController@index'); //'implementar el filtrado con query buider
 Route::post('/houses', 'HouseController@store');
 Route::get('/houses/{house}','HouseController@show');

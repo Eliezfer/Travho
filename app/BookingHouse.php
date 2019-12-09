@@ -16,6 +16,19 @@ class BookingHouse extends Model
     ];
 
  
+    public function scopeHouseBokings($query) 
+    {
+      return $query->where('user_id', auth()->user()->id )
+            ->orderBy('id','DESC')
+            ->paginate(1);
+    }
+
+    public function scopeBokingsOfYourHouse($query) 
+    {
+      return $query->join('booking_houses.house_id',  'houses.id')
+                ->where('houses.user_id', auth()->user()->id)->get();
+            ;
+    }
 
   /**
   * Get the user that owns the Booking.

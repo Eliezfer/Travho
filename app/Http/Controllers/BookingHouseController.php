@@ -6,6 +6,9 @@ use App\BookingHouse;
 use Illuminate\Http\Request;
 use Response;
 use App\Http\Requests\BookingHouseCreateRequest;
+use App\Http\Resources\BookingHouseResource;
+use App\Http\Resources\BookingHouseResourceCollection;
+use App\House;
 
 class BookingHouseController extends Controller
 {
@@ -21,11 +24,8 @@ class BookingHouseController extends Controller
      */
     public function index()
     {
-        //
-        $bookingsHouse = BookingHouse::orderBy('id','DESC')
-            ->where('user_id', auth()->user()->id )
-            ->paginate(10);
-        return Response::json($bookingsHouse,200);
+        $bookingsHouse = BookingHouse::HouseBokings();
+        return new  BookingHouseResourceCollection($bookingsHouse,200);
     }
 
     /**
@@ -48,9 +48,13 @@ class BookingHouseController extends Controller
     {
         //
         $input=$request->all();
+        $house=House::findorfail($input['house_id']);
+        
+        $this->authorize('create',[BookingHouse::class, $house]);
+
         $input['user_id']=auth()->user()->id ;
         $bookingHouse = BookingHouse::create($input);
-        return Response::json($bookingHouse,201);
+        return new BookingHouseResource($bookingHouse,201);
     }
 
     /**
@@ -63,7 +67,7 @@ class BookingHouseController extends Controller
     {
         //
         $this->authorize('view',$bookingHouse);
-        return $bookingHouse;
+        return new BookingHouseResource($bookingHouse);
     }
 
     /**
