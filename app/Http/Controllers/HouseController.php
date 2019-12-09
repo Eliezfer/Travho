@@ -8,10 +8,12 @@ use App\User;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\HouseRequest;
-use Response;
-
+use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\House as HouseResource;
 use App\Http\Resources\HouseCollection;
+use Facade\Ignition\QueryRecorder\Query;
+use Illuminate\Support\Collection;
+
 class HouseController extends Controller
 {
     /**
@@ -19,13 +21,27 @@ class HouseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $houses=House::orderBy('id','DESC')
-        ->where('status','true')
-        ->paginate(10);
+        $query=$request->query();
+
+        $housesQuery=House::where('status','=','true');
+        //si la variable State se encuentra en la URL complemnta el Query a la base de datos
+        if($request->query('state', 'false')!='false'){
+            $housesQuery= $housesQuery->where('state',$query['state']);
+        }
+
+        //Realiza la consulta y ordena de forma decendednte con respecto a la Id con paginación
+        $houses=$housesQuery->orderBy('id','DESC')->paginate(10);
+
+        //Incluye la variable state a la url
+        if($request->query('state', 'false')!='false'){
+            $houses->withPath('/api/houses?state='.$query['state']);
+        }
         return new HouseCollection($houses);
+
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -45,16 +61,20 @@ class HouseController extends Controller
      */
     public function store(HouseRequest $request)
     {
-        $this->middleware('auth:api');
 
+        $query_string=$request->query();
         $data_address=$request['address'];
+
+        $data_house=$request['data'];
         $address=Address::create($data_address);
         $data_house["address_id"]=$address['id'];
 
-        $data_house=$request['data'];
-        $data_house["user_id"]=auth()->user()->id;
-        $house=House::create($data_house);
+       //obtener la id del usuario mediante su token
+       $user= User::select('id')->where('api_token','=',$query_string['api_token'])->get()[0];
 
+       $data_house["user_id"]=$user['id'];
+
+        $house=House::create($data_house);
         return new HouseResource($house);
     }
 
@@ -90,15 +110,14 @@ class HouseController extends Controller
      */
     public function update(House $house,HouseRequest $request)
     {
+      //verifica que este autenticado
 
+        $this->authorize('update',$house);
         $data_address=$request['address'];
         $data_house=$request['data'];
 
-        $house=House::findorfail($id);
-
-        $address=Address::findorfail($house['address_id']);
         $house->update($data_house);
-        $address->update($data_address);
+        $house->address->update($data_address);
 
          return new HouseResource($house);
     }

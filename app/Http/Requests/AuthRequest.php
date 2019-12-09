@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 
-class UserRequest extends FormRequest
+class AuthRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,9 +26,8 @@ class UserRequest extends FormRequest
             "errors" => [[
                 "code" => "Error-1",
                 "title" => "Unprocessable Entity",
-
             ]]
-        ] ,422));
+        ] ,422)); 
     }
 
     /**
@@ -37,18 +36,12 @@ class UserRequest extends FormRequest
      * @return array
      */
 
-     // DATE_FORMAT (DATETIME CLASS)
-     // email:rfc
     public function rules()
     {
         return [
             //
-            'data.name'              =>  'required',
-            'data.user'              =>  'required',
             'data.password'          =>  'required', // Mayor a tal número
-            'data.cellphone'         =>  'required',
             'data.email'             =>  'required ',
-            'data.birthdate'         =>  'required',
         ];
     }
 }
