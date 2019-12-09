@@ -34,9 +34,22 @@ Route::get('bookings/{bookingHouse}', 'BookingHouseController@show');
  * Edit a booking
  */
 Route::put('booking/{bookingHouse}', 'BookingHouseController@update');
-Route::get('/houses','HouseController@index'); //'implementar el filtrado con query buider
+
+/**
+ * Get a list of Huouses
+ */
+Route::get('/houses','HouseController@index');
+/**
+ * Create House
+ */
 Route::middleware('auth:api')->post('/houses', 'HouseController@store');
+/**
+ * Get a House by Id
+ */
 Route::get('/houses/{house}','HouseController@show');
+/**
+ * Update a House by Id
+ */
 Route::middleware('auth:api')->put('/houses/{house}', 'HouseController@update');
 
 // Login

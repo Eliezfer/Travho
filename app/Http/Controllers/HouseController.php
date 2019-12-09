@@ -61,19 +61,20 @@ class HouseController extends Controller
      */
     public function store(HouseRequest $request)
     {
-        //verifica que este autenticado
 
-
+        $query_string=$request->query();
         $data_address=$request['address'];
 
         $data_house=$request['data'];
         $address=Address::create($data_address);
         $data_house["address_id"]=$address['id'];
 
-       //obtener la id del usuario mediante su autenticación
-        $data_house["user_id"]='1';
-        $house=House::create($data_house);
+       //obtener la id del usuario mediante su token
+       $user= User::select('id')->where('api_token','=',$query_string['api_token'])->get()[0];
 
+       $data_house["user_id"]=$user['id'];
+
+        $house=House::create($data_house);
         return new HouseResource($house);
     }
 
