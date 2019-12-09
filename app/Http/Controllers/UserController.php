@@ -49,19 +49,15 @@ class UserController extends Controller
         $data = $request['data'];
         // Se filtra por email
         $user = User::where('email', $data['email'])->first();
-<<<<<<< HEAD
-        // Se verifica el email y el password
-=======
-        
-        // Solamente el usuario puede cerrar su sesión
+      // Se verifica el email y el password
+      // Solamente el usuario puede cerrar su sesión
 
         $this->authorize('logout',$user);
 
-       
-        // Se verifica el email y el password 
->>>>>>> e46f3206262130fd92286b129229cc1780c73757
+
+        // Se verifica el email y el password
         if($user && ($data['password'] == $user->password )){
-            
+
             $data = [
              'api_token'  =>  Str::random(80),
             ];
