@@ -35,9 +35,9 @@ Route::get('bookings/{bookingHouse}', 'BookingHouseController@show');
  */
 Route::put('booking/{bookingHouse}', 'BookingHouseController@update');
 Route::get('/houses','HouseController@index'); //'implementar el filtrado con query buider
-Route::post('/houses', 'HouseController@store');
+Route::middleware('auth:api')->post('/houses', 'HouseController@store');
 Route::get('/houses/{house}','HouseController@show');
-Route::put('/houses/{house}', 'HouseController@update');
+Route::middleware('auth:api')->put('/houses/{house}', 'HouseController@update');
 
 // Login
 Route::POST('users/login', 'UserController@login');

@@ -24,20 +24,22 @@ class HouseController extends Controller
     public function index(Request $request)
     {
         $query=$request->query();
-        //verifica que la variable Estate este presente
+
+        $housesQuery=House::where('status','=','true');
+        //si la variable State se encuentra en la URL complemnta el Query a la base de datos
         if($request->query('state', 'false')!='false'){
-            $houses=House::orderBy('id','DESC')
-            ->where('status','true')->where('state',$query['state'])
-            ->paginate(10);
-            //asigna el path con el state actual
-            $houses->withPath('/houses?state='.$query['state']);
-            return new HouseCollection($houses);
+            $housesQuery= $housesQuery->where('state',$query['state']);
         }
-        //retorna la primera pagina
-        $houses=House::orderBy('id','DESC')
-        ->where('status','true')
-        ->paginate(10);
+
+        //Realiza la consulta y ordena de forma decendednte con respecto a la Id con paginación
+        $houses=$housesQuery->orderBy('id','DESC')->paginate(10);
+
+        //Incluye la variable state a la url
+        if($request->query('state', 'false')!='false'){
+            $houses->withPath('/api/houses?state='.$query['state']);
+        }
         return new HouseCollection($houses);
+
     }
 
 
@@ -108,14 +110,13 @@ class HouseController extends Controller
     public function update(House $house,HouseRequest $request)
     {
       //verifica que este autenticado
-         $this->middleware('auth:api');
 
+        $this->authorize('logout',$house);
         $data_address=$request['address'];
         $data_house=$request['data'];
 
-        $address=Address::findorfail($house['address_id']);
         $house->update($data_house);
-        $address->update($data_address);
+        $house->address->update($data_address);
 
          return new HouseResource($house);
     }

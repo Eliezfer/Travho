@@ -39,11 +39,16 @@ class UserController extends Controller
             ], 200);
         }
     }
+<<<<<<< HEAD
  
+=======
+
+>>>>>>> 7cfe8f6eb27e82ec77aa3c24941b2fe78100cef6
     public function logout(AuthRequest $request){
         $data = $request['data'];
         // Se filtra por email
         $user = User::where('email', $data['email'])->first();
+<<<<<<< HEAD
         
         // Solamente el usuario puede cerrar su sesión
 
@@ -51,8 +56,17 @@ class UserController extends Controller
 
        
         // Se verifica el email y el password 
+=======
+      // Se verifica el email y el password
+      // Solamente el usuario puede cerrar su sesión
+
+        $this->authorize('logout',$user);
+
+
+        // Se verifica el email y el password
+>>>>>>> 7cfe8f6eb27e82ec77aa3c24941b2fe78100cef6
         if($user && ($data['password'] == $user->password )){
-            
+
             $data = [
              'api_token'  =>  Str::random(80),
             ];

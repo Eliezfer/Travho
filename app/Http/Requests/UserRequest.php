@@ -21,12 +21,12 @@ class UserRequest extends FormRequest
 
     protected function failedValidation(Validator $validator)
     {
-        $errors = (new ValidationException($validator))->errors();
+
         throw new HttpResponseException(response()->json(   [
             "errors" => [[
                 "code" => "Error-1",
                 "title" => "Unprocessable Entity",
-                "messages" => $errors
+
             ]]
         ] ,422));
     }
