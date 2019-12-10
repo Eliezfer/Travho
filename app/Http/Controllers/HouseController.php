@@ -130,6 +130,9 @@ class HouseController extends Controller
      */
     public function destroy(House $house)
     {
-        //
+        $this->authorize('delete',$house);
+        $house['status']=false;
+        $house->update();
+        return response("",204);
     }
 }

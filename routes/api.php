@@ -51,6 +51,12 @@ Route::get('/houses/{house}','HouseController@show');
  * Update a House by Id
  */
 Route::middleware('auth:api')->put('/houses/{house}', 'HouseController@update');
+/**
+ * Delete a House by Id
+ */
+Route::middleware('auth:api')->delete('/houses/{house}', 'HouseController@destroy');
+
+
 
 // Login
 Route::POST('users/login', 'UserController@login');
