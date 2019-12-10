@@ -23,12 +23,27 @@ class BookingHouse extends Model
             ->paginate(1);
     }
 
-    public function scopeBokingsOfYourHouse($query) 
+    public function scopeBookingsOfYourHouse($query) 
     {
-      return $query->join('booking_houses.house_id',  'houses.id')
-                ->where('houses.user_id', auth()->user()->id)->get();
+      return $query->join('houses','booking_houses.house_id','=','houses.id')
+                   ->where('houses.user_id',auth()->user()->id)
+                   ->select('booking_houses.*')
+                   ->paginate(1);
             ;
     }
+
+    public function scopeBookingsAccept($query, $houseID){
+      return $query ->where('house_id', $houseID)
+                    ->where('status', 'accepted');
+                    
+    }
+
+    public function scopeBookingsBetweenDate($query, $checkIn, $checkOut){
+      return $query ->whereBetween('check_in', [$checkIn,$checkOut])
+                    ->orWhereBetween('check_out', [$checkIn,$checkOut]);
+    }
+
+    
 
   /**
   * Get the user that owns the Booking.

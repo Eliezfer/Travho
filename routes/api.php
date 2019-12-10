@@ -33,7 +33,7 @@ Route::get('bookings/{bookingHouse}', 'BookingHouseController@show')->name('book
 /**
  * Edit a booking
  */
-Route::put('booking/{bookingHouse}', 'BookingHouseController@update');
+Route::put('bookings/{bookingHouse}', 'BookingHouseController@update');
 
 /**
  * Get a list of Huouses

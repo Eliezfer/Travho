@@ -33,7 +33,10 @@ class BookingHousePolicy
     public function view(User $user, BookingHouse $bookingHouse)
     {
         //
-        return $user->id == $bookingHouse->user_id;
+        $house=House::findorfail($bookingHouse->house_id);
+        return ($user->id == $bookingHouse->user_id) || ($user->id == $house->user_id)
+                ? Response::allow()
+                : Response::deny('Acción no autorizada, las reservaciones son privadas, no puede ver este booking');;
     }
 
     /**
@@ -42,12 +45,24 @@ class BookingHousePolicy
      * @param  \App\User  $user
      * @return mixed
      */
-    public function create(User $user, $house)
+    public function create(User $user, House $house)
     {
-        
         return $user->id != $house->user_id
                 ? Response::allow()
                 : Response::deny('Acción no autorizada, no puede rentar su propia casa');
+    }
+
+    public function isHouseAvailable(User $user, $house){
+        return $house->status
+                ? Response::allow()
+                : Response::deny('Acción no autorizada, no puede rentar una casa dada de baja');
+    }
+
+    public function isHouseAvailableToTheDate(User $user, $bookingsAccept){
+        $isEmpty = $bookingsAccept->isEmpty();
+        return $isEmpty
+                ? Response::allow()
+                : Response::deny('Acción no autorizada, la casa ha sido rentada en esas fechas');
     }
 
     /**
@@ -60,10 +75,24 @@ class BookingHousePolicy
     public function update(User $user, BookingHouse $bookingHouse)
     {
         //
-
-        return $user->id == $bookingHouse->user_id ;
+        $house=House::findorfail($bookingHouse->house_id);
+        return ($user->id == $bookingHouse->user_id) || ($user->id == $house->user_id);
     }
 
+    public function updateBookingAccepted(User $user, BookingHouse $bookingHouse)
+    {
+        return $bookingHouse->status!='accepted'
+                ? Response::allow()
+                : Response::deny('Acción no autorizada, no puede cambiar el estado de una renta aceptada');
+        ;
+    }
+    public function updateBookingCanceled(User $user, BookingHouse $bookingHouse)
+    {
+        return $bookingHouse->status!='canceled'
+                ? Response::allow()
+                : Response::deny('Acción no autorizada, la renta se cancelo no puedes cambiar el estgado');
+        ;
+    }
     /**
      * Determine whether the user can delete the booking house.
      *

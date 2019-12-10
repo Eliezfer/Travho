@@ -6,6 +6,7 @@ use App\BookingHouse;
 use Illuminate\Http\Request;
 use Response;
 use App\Http\Requests\BookingHouseCreateRequest;
+use App\Http\Requests\BookingHouseUpdateRequest;
 use App\Http\Resources\BookingHouseResource;
 use App\Http\Resources\BookingHouseResourceCollection;
 use App\House;
@@ -24,7 +25,7 @@ class BookingHouseController extends Controller
      */
     public function index()
     {
-        $bookingsHouse = BookingHouse::HouseBokings();
+        $bookingsHouse = BookingHouse::BokingsOfYourHouse();
         return new  BookingHouseResourceCollection($bookingsHouse,200);
     }
 
@@ -49,10 +50,13 @@ class BookingHouseController extends Controller
         //
         $input=$request->all();
         $house=House::findorfail($input['house_id']);
-        
         $this->authorize('create',[BookingHouse::class, $house]);
-
-        $input['user_id']=auth()->user()->id ;
+        $this->authorize('isHouseAvailable',[BookingHouse::class, $house]);
+        $bookingsAccept = BookingHouse::BookingsAccept($input['house_id'])
+                        ->BookingsBetweenDate($input['check_in'],$input['check_out'])->get();
+        $this->authorize('isHouseAvailableToTheDate',[BookingHouse::class, $bookingsAccept]);
+        $input['user_id']=auth()->user()->id;
+        $input['status'] = 'in process';
         $bookingHouse = BookingHouse::create($input);
         return new BookingHouseResource($bookingHouse,201);
     }
@@ -65,7 +69,6 @@ class BookingHouseController extends Controller
      */
     public function show(BookingHouse $bookingHouse)
     {
-        //
         $this->authorize('view',$bookingHouse);
         return new BookingHouseResource($bookingHouse);
     }
@@ -89,12 +92,26 @@ class BookingHouseController extends Controller
      * @param  \App\BookingHouse  $bookingHouse
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, BookingHouse $bookingHouse)
+    public function update(BookingHouseUpdateRequest $request, BookingHouse $bookingHouse)
     {
-        //
-        //BookingHouse->status()
+        $this->authorize('update',$bookingHouse);
+        $house=House::findorfail($bookingHouse->house_id);
+
+        if(auth()->user()->id == $house->user_id){
+            $this->authorize('updateBookingAccepted',$bookingHouse);
+            $this->authorize('updateBookingCanceled',$bookingHouse);
+            $bookingHouse->status = $request->status;
+            $bookingHouse->save();
+        }
+        if(auth()->user()->id == $bookingHouse->user_id){
+            echo 'ddd';
+        }
+        
+
+
+        /*/BookingHouse->status()
         $attribute = $request->all();
-        $bookingHouse->update($attribute);
+        $bookingHouse->update($attribute);*/
         return $bookingHouse;
     }
 
