@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use App\User;
+use App\House;
+use App\Booking;
 use Illuminate\Http\Request;
 use \Illuminate\Validation\Validator;
 use App\Http\Resources\User as UserResource;
@@ -39,24 +41,18 @@ class UserController extends Controller
             ], 200);
         }
     }
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> 7cfe8f6eb27e82ec77aa3c24941b2fe78100cef6
+
     public function logout(AuthRequest $request){
         $data = $request['data'];
         // Se filtra por email
         $user = User::where('email', $data['email'])->first();
-<<<<<<< HEAD
-        
         // Solamente el usuario puede cerrar su sesión
 
         $this->authorize('logout',$user);
 
        
         // Se verifica el email y el password 
-=======
       // Se verifica el email y el password
       // Solamente el usuario puede cerrar su sesión
 
@@ -64,7 +60,6 @@ class UserController extends Controller
 
 
         // Se verifica el email y el password
->>>>>>> 7cfe8f6eb27e82ec77aa3c24941b2fe78100cef6
         if($user && ($data['password'] == $user->password )){
 
             $data = [
@@ -208,6 +203,14 @@ class UserController extends Controller
      */
     public function destroy(Request $request,$id,User $user)
     {
+        // Borrar booking y houses 
+        // filtro H
+        $houses=House::where('user_id','=',$id)->get();
+        //foreach $house as
+        //    update()  status (false)
+
+        // Booking house  (status)
+
         $this->authorize('delete',$user);
        // $header = $request->header('api_token');
         // Solamente el mismo usuario puede destruir su usuario
