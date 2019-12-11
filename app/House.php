@@ -11,6 +11,7 @@ class House extends Model
         'country','state','municipality','address_id','user_id','description','price_for_day','status',
     ];
 
+    
 
     /*Definicion de relaciones entre las tablas de la base de datos */
     public function address()
