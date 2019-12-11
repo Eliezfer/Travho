@@ -76,7 +76,7 @@ class HouseController extends Controller
        $data_house["user_id"]=$user['id'];
 
         $house=House::create($data_house);
-
+        return $house;
         return new HouseResource($house);
     }
 
