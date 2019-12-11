@@ -11,7 +11,7 @@ $factory->define(House::class, function (Faker $faker) {
     return [
         //
         'country'=> $faker->country,
-        'state' => $faker->state,
+        'state' => 'Hidalgo',
         'municipality' => 'merida',
         'user_id'=>function () {
             return factory(User::class)->create()->id;

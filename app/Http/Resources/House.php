@@ -25,7 +25,7 @@ class House extends JsonResource
                 'description'=>$this->description,
                 'price_for_day'=>$this->price_for_day,
                 'status'=>$this->status,
-                'country'=>$this->coutry,
+                'country'=>$this->country,
                 'state'=>$this->state,
                 'municipality'=>$this->municipality,
             ],
@@ -44,7 +44,6 @@ class House extends JsonResource
                 'data'=>[
                     'name'=>$this->user['name'],
                     'user'=>$this->user['user'],
-                    'password'=>$this->user['password'],
                     'birthdate'=>$this->user['birthdate'],
                     'cellphone'=>$this->user['cellphone'],
                     'email'=>$this->user['email']

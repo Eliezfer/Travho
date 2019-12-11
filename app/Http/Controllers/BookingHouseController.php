@@ -59,6 +59,18 @@ class BookingHouseController extends Controller
     }
 
     /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\BookingHouse  $bookingHouse
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(BookingHouse $bookingHouse)
+    {
+        //
+
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -68,7 +80,7 @@ class BookingHouseController extends Controller
     public function update(BookingHouseUpdateRequest $request, BookingHouse $bookingHouse)
     {
         $this->authorizeUpdate($bookingHouse);
-        
+
         $house=House::findorfail($bookingHouse->house_id);
         $statusRequest = $request->has('data.attributes.status')?
                         $request->input('data.attributes.status')
@@ -104,7 +116,7 @@ class BookingHouseController extends Controller
             if($bookingHouse->status == 'accepted'){
                 return $this->updateBookingAccepted($bookingHouse, $request);
             }
-            
+
         }
         $bookingHouse->save();
         return new BookingHouseResource($bookingHouse);
