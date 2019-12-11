@@ -65,7 +65,7 @@ class HousePolicy
      */
     public function delete(User $user, House $house)
     {
-        //
+          return $user->id == $house->user_id;
     }
 
     /**

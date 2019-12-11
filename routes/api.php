@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+Route::group(['prefix' => 'v1'], function () {
 Route::middleware('auth:api')->get('/users', 'UserController@index');
 
 /**
@@ -28,16 +28,35 @@ Route::get('bookings', 'BookingHouseController@index');
 /**
  * Get a booking
  */
-Route::get('bookings/{bookingHouse}', 'BookingHouseController@show');
+Route::get('bookings/{bookingHouse}', 'BookingHouseController@show')->name('bookings');;
 
 /**
  * Edit a booking
  */
-Route::put('booking/{bookingHouse}', 'BookingHouseController@update');
-Route::get('/houses','HouseController@index'); //'implementar el filtrado con query buider
+Route::put('bookings/{bookingHouse}', 'BookingHouseController@update');
+
+/**
+ * Get a list of Huouses
+ */
+Route::get('/houses','HouseController@index');
+/**
+ * Create House
+ */
 Route::middleware('auth:api')->post('/houses', 'HouseController@store');
+/**
+ * Get a House by Id
+ */
 Route::get('/houses/{house}','HouseController@show');
+/**
+ * Update a House by Id
+ */
 Route::middleware('auth:api')->put('/houses/{house}', 'HouseController@update');
+/**
+ * Delete a House by Id
+ */
+Route::middleware('auth:api')->delete('/houses/{house}', 'HouseController@destroy');
+
+
 
 
 // Login
