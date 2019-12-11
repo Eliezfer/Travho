@@ -116,7 +116,14 @@ class HouseTest extends TestCase
                     ]
                 ]
             ]);
+<<<<<<< HEAD
 
+=======
+            $this->assertDatabaseHas('Houses',
+            [
+
+            ]);
+>>>>>>> develop
 
 
 

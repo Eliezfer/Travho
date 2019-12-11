@@ -28,12 +28,12 @@ Route::get('bookings', 'BookingHouseController@index');
 /**
  * Get a booking
  */
-Route::get('bookings/{bookingHouse}', 'BookingHouseController@show');
+Route::get('bookings/{bookingHouse}', 'BookingHouseController@show')->name('bookings');;
 
 /**
  * Edit a booking
  */
-Route::put('booking/{bookingHouse}', 'BookingHouseController@update');
+Route::put('bookings/{bookingHouse}', 'BookingHouseController@update');
 
 /**
  * Get a list of Huouses

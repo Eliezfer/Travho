@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Address;
 use App\House;
 use App\User;
+use App\BookingHouse;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\HouseRequest;
@@ -131,6 +132,8 @@ class HouseController extends Controller
     public function destroy(House $house)
     {
         $this->authorize('delete',$house);
+        $bookingHouse=BookingHouse::find(0);
+        return  $bookingHouse;
         $house['status']=false;
         $house->update();
         return response("",204);

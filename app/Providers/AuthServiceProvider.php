@@ -38,6 +38,8 @@ class AuthServiceProvider extends ServiceProvider
     //         return User::where('api_token', $request->header('api_token'))->first();
     //     }
     //  });
+    //
+        
      $this->registerPolicies();
     }
 }

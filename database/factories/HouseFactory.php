@@ -12,9 +12,9 @@ $factory->define(House::class, function (Faker $faker) {
         'state' => $faker->state,
         'municipality' => 'merida',
         'user_id'=>'1',
-        'address_id'=>'1',
+        'address_id'=>'3',
         'description'=> $faker->text(30),
         'price_for_day'=>$faker-> randomFloat(2, 0, 100) ,
-        'status'=>true
+        'status'=>false
     ];
 });
