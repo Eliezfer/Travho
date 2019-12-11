@@ -22,7 +22,6 @@ class CreateHousesTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('description');
             $table->string('price_for_day');
-            $table->string('country');
             $table->string('state');
             $table->string('municipality');
             $table->boolean('status');
