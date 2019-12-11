@@ -30,7 +30,7 @@ class User extends JsonResource
             //'api_token' => $this->api_token,
             ],
         'link' =>[
-            'self' => config('app.url').":8000/api/users/".$this->id
+            'self' => config('app.url').":8000/api/v1/users/".$this->id
         ],
             
         ];
