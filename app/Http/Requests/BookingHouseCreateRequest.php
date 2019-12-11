@@ -29,22 +29,22 @@ class BookingHouseCreateRequest extends FormRequest
         
         return [
             //
-            'check_in'=> 'required|before:check_out|after:today',
-            'check_out' => 'required|after:check_in',
-            'house_id' => 'required|exists:houses,id'
+            'data.attributes.check_in'=> 'required|before:data.attributes.check_out|after:today',
+            'data.attributes.check_out' => 'required|after:data.attributes.check_in',
+            'data.attributes.house_id' => 'required|exists:houses,id'
         ];
     }
 
     public function messages()
     {
         return[
-            'check_in.required' => 'La :attribute no es enviado en la solicitud',
-            'check_in.before' => 'La :attribute debe ser una fecha antes del check_out',
-            'check_in.after' => 'La :attribute debe ser una fecha despues de hoy',
-            'check_out.required' => 'La :attribute no es enviado en la solicitud',
-            'check_out.after' => 'La :attribute debe ser una fecha despues del check_in',
-            'house_id.required' => 'El :attribute no es enviado en la solicitud',
-            'house_id.exists' => 'El :attribute no existe'
+            'data.attributes.check_in.required' => 'La :attribute no es enviado en la solicitud',
+            'data.attributes.check_in.before' => 'La :attribute debe ser una fecha antes del check_out',
+            'data.attributes.check_in.after' => 'La :attribute debe ser una fecha despues de hoy',
+            'data.attributes.check_out.required' => 'La :attribute no es enviado en la solicitud',
+            'data.attributes.check_out.after' => 'La :attribute debe ser una fecha despues del check_in',
+            'data.attributes.house_id.required' => 'El :attribute no es enviado en la solicitud',
+            'data.attributes.house_id.exists' => 'El :attribute no existe'
 
         ];
     }
@@ -52,9 +52,9 @@ class BookingHouseCreateRequest extends FormRequest
     public function attributes()
     {
         return [
-            'check_in' => 'fecha de entrada',
-            'check_out' => 'fecha de salida',
-            'house_id' => 'id de la casa'
+            'data.attributes.check_in' => 'fecha de entrada',
+            'data.attributes.check_out' => 'fecha de salida',
+            'data.attributes.house_id' => 'id de la casa'
         ];
     }
 

@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+Route::group(['prefix' => 'v1'], function () {
 Route::middleware('auth:api')->get('/users', 'UserController@index');
 
 /**
@@ -75,3 +75,4 @@ Route::middleware('auth:api')->put('users/{user}', "UserController@update");
 // Delete a user
 Route::middleware('auth:api')->delete('users/{user}', "UserController@destroy");
 
+});
