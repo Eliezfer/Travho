@@ -7,58 +7,12 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illumintae\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Validator;
 
 class UserTest extends TestCase
 {
-    
-    public function test_client_can_create_user()
-    {
-        // GIVEN 
-        // El cliente tiene una rapresentación de un Usuario que quiere agregar a la aplicación
-        // Request Body
-        $UserData = [
-            'data' => [
-                'name' => 'Alejandro',
-                'user' => 'AGC',
-                'password' => '12345',
-                'cellphone' => '5435678',
-                'email' => 'agcfinal1.0@gmail.com',
-                'birthdate' => '2/12/97',
-                'api_token' => '',
-            ]
-        ];
-
-        // When 
-        // Se llama al EndPoint para crear un usuario
-        $response = $this->json('POST', '/api/v1/users', $UserData);
- 
-        // Se verifica el código de Status
-        $response->assertStatus(201);
-
-        // $response->assertJson([
-        //     'id' => '1',
-        //     'data' => [
-        //         'name' => "Alejandro",
-        //         'user' => 'AGC',
-        //         'date' => '2/12/97',
-        //         'cellphone' => '5435678',
-        //         'email' => 'agcfinal1.0@gmail.com',
-                
-        //     ],
-        //     'link' => [
-        //         "self" => env("APP_URL")."/api/v1/users/1",
-        //     ]
-
-        // ]);
-
-  
-
-
-    }
+    use RefreshDatabase;
     /**
      *  CREATE-1
      */
@@ -90,11 +44,11 @@ class UserTest extends TestCase
           $response->assertJson([
                 'id' => 1,
                 'data' => [
-                    'nombre' => 'Alejandro',
-                    'usuario' => 'AGC',
-                    'date' => '2/12/97',
-                    'teléfono' => '5435678',
-                    'correo' =>'agcfinal1.0@gmail.com',
+                    'name' => 'Alejandro',
+                    'user' => 'AGC',
+                    'birthdate' => '2/12/97',
+                    'cellphone' => '5435678',
+                    'email' =>'agcfinal1.0@gmail.com',
                 ],
                 'link' => [
                     "self" => env("APP_URL").':8000/api/v1/users/1',
@@ -104,11 +58,11 @@ class UserTest extends TestCase
         // Se asegura que el usuario fue creado 
         // con la información correcta 
         $response->assertJsonFragment([
-            'nombre' => 'Alejandro',
-            'usuario' => 'AGC',
-            'date' => '2/12/97',
-            'teléfono' => '5435678',
-            'correo' =>'agcfinal1.0@gmail.com',
+            'name' => 'Alejandro',
+            'user' => 'AGC',
+            'birthdate' => '2/12/97',
+            'cellphone' => '5435678',
+            'email' =>'agcfinal1.0@gmail.com',
         ]);
         // Se decodifica el body
         $body = $response->decodeResponseJson();
@@ -661,4 +615,50 @@ class UserTest extends TestCase
      * LOGIN-4
      * Password Incorrect
      */
+    public function test_client_send_wrong_password()
+    {
+
+        //Given 
+
+        // Existe una representación en la base de datos 
+        $user = factory(User::class)->create([
+                'email' => 'agcfinal1.0@gmail.com',
+                'user' => 'AGC',
+                'name' => 'Alejandro',
+                'password' => '12345',
+                'api_token' => Str::random(80),
+            ]);
+        
+        
+        // El cliente tiene una representación del usuario para loguearse en la API
+        // Request Body
+            $userData = [
+                'data' => [
+                    'email' => 'agcfinal1.0@gmail.com', 
+                    'password' => '12', 
+                ]
+            ];
+
+                // WHEN
+        // Se envía un request con la información necesaria para loguear un usuario
+        $response = $this->json('POST',"api/v1/users/login", $userData);
+
+        // THEN 
+        // Retornar código 200
+        
+        $response->assertStatus(200);
+
+        $body = $response->decodeResponseJson();
+
+        // Asegurar que el usuario es correcto, verificando su 
+        // email y password            
+        $response->assertJson([
+            'data' => [
+                'name' => $user->name,
+                'user' => $user->user,
+                'email' => $user->email,
+                'api_token' => $user->api_token,
+            ]
+        ]);
+        }
 }

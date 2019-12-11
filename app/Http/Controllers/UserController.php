@@ -207,19 +207,15 @@ class UserController extends Controller
      */
     public function destroy(Request $request,User $user)
     {
-        // Borrar booking y houses 
-        // filtro H
-         //$houses=House::where('user_id','=',$id)->get();
-        // return $houses;
-        //foreach $house as
-        //    update()  status (false)
-
-        // Booking house  (status)
-
         $this->authorize('delete',$user);
-       // $header = $request->header('api_token');
-        // Solamente el mismo usuario puede destruir su usuario
-        //$userToDestroy = User::findOrFail($id);
+        // Borrar booking y houses 
+        // filtro H 
+         $houses=House::where('user_id','=',$user->id)->get();
+        BookingHouse::where('user_id', '=', $user->id)
+        ->where('status', '')
+        ->update(['status' => 'cancelled']);
+
+        
         $user->delete();
         return response(null,204);
     }
