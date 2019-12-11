@@ -6,6 +6,10 @@ use App\BookingHouse;
 use Illuminate\Http\Request;
 use Response;
 use App\Http\Requests\BookingHouseCreateRequest;
+use App\Http\Requests\BookingHouseUpdateRequest;
+use App\Http\Resources\BookingHouse as BookingHouseResource;
+use App\Http\Resources\BookingHouseCollection as BookingHouseResourceCollection;
+use App\House;
 
 class BookingHouseController extends Controller
 {
@@ -21,21 +25,8 @@ class BookingHouseController extends Controller
      */
     public function index()
     {
-        //
-        $bookingsHouse = BookingHouse::orderBy('id','DESC')
-            ->where('user_id', auth()->user()->id )
-            ->paginate(10);
-        return Response::json($bookingsHouse,200);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $bookingsHouse = BookingHouse::MyBokings();
+        return new  BookingHouseResourceCollection($bookingsHouse,200);
     }
 
     /**
@@ -47,10 +38,12 @@ class BookingHouseController extends Controller
     public function store(BookingHouseCreateRequest $request)
     {
         //
-        $input=$request->all();
-        $input['user_id']=auth()->user()->id ;
-        $bookingHouse = BookingHouse::create($input);
-        return Response::json($bookingHouse,201);
+        $attributes=$request->input('data.attributes');
+        $this->authorizeStore($attributes);
+        $attributes['user_id']=auth()->user()->id;
+        $attributes['status'] = 'in process';
+        $bookingHouse = BookingHouse::create($attributes);
+        return new BookingHouseResource($bookingHouse,201);
     }
 
     /**
@@ -61,21 +54,8 @@ class BookingHouseController extends Controller
      */
     public function show(BookingHouse $bookingHouse)
     {
-        //
         $this->authorize('view',$bookingHouse);
-        return $bookingHouse;
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\BookingHouse  $bookingHouse
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(BookingHouse $bookingHouse)
-    {
-        //
-        
+        return new BookingHouseResource($bookingHouse);
     }
 
     /**
@@ -85,23 +65,76 @@ class BookingHouseController extends Controller
      * @param  \App\BookingHouse  $bookingHouse
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, BookingHouse $bookingHouse)
+    public function update(BookingHouseUpdateRequest $request, BookingHouse $bookingHouse)
     {
-        //
-        //BookingHouse->status()
-        $attribute = $request->all();
-        $bookingHouse->update($attribute);
-        return $bookingHouse;
+        $this->authorizeUpdate($bookingHouse);
+        
+        $house=House::findorfail($bookingHouse->house_id);
+        $statusRequest = $request->has('data.attributes.status')?
+                        $request->input('data.attributes.status')
+                        :'none';
+        if(auth()->user()->id == $house->user_id){
+            $this->authorize('updateBookingAccepted',$bookingHouse);
+            if( $statusRequest=='accepted'){
+                BookingHouse::BookingsBetweenDate($bookingHouse->check_in,$bookingHouse->check_out)
+                ->UpdateBookingsToCancel($bookingHouse->house_id);
+            }
+            $bookingHouse->status = $statusRequest;
+        }
+        if(auth()->user()->id == $bookingHouse->user_id){
+            $this->authorize('updateBookingRejected',$bookingHouse);
+
+            if(($statusRequest == 'canceled') && ($bookingHouse->status == 'accepted') ){
+                $this->authorize('updateBookingToCancel',$bookingHouse);
+                $bookingHouse->status = $statusRequest;
+            }
+
+            if($statusRequest == 'canceled' ){
+                $bookingHouse->status = $statusRequest;
+            }
+
+            if($bookingHouse->status == 'in process'){
+                $chekInRequest=$request->input('data.attributes.check_in');
+                $checkOutRequest =$request->input('data.attributes.check_out');
+                $this->authorizeDate($bookingHouse->house_id,$chekInRequest,$checkOutRequest);
+                $bookingHouse->check_in = $chekInRequest;
+                $bookingHouse->check_out = $checkOutRequest;
+            }
+
+            if($bookingHouse->status == 'accepted'){
+                return $this->updateBookingAccepted($bookingHouse, $request);
+            }
+            
+        }
+        $bookingHouse->save();
+        return new BookingHouseResource($bookingHouse);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\BookingHouse  $bookingHouse
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(BookingHouse $bookingHouse)
-    {
-        //
+    public function updateBookingAccepted($bookingHouse, $request){
+        $bookingHouse->status = 'canceled';
+                $bookingHouse->save();
+                $input = $request->input('data.attributes');
+                $input['house_id'] = $bookingHouse->house_id;
+                return $this->store(new BookingHouseCreateRequest($input));
     }
+
+    public function authorizeUpdate($bookingHouse){
+        $this->authorize('update',$bookingHouse);
+        $this->authorize('updatePastBookingDate',$bookingHouse);
+        $this->authorize('updateBookingCanceled',$bookingHouse);
+    }
+
+    public function authorizeStore($input){
+        $house=House::findorfail($input['house_id']);
+        $this->authorize('create',[BookingHouse::class, $house]);
+        $this->authorize('isHouseAvailable',[BookingHouse::class, $house]);
+        $this->authorizeDate($input['house_id'],$input['check_in'],$input['check_out']);
+    }
+
+    public function authorizeDate($houseId, $checkIn, $checkOut){
+        $bookingsAccept = BookingHouse::BookingsAccept($houseId)
+                        ->BookingsBetweenDate($checkIn,$checkOut)->get();
+        $this->authorize('isHouseAvailableToTheDate',[BookingHouse::class, $bookingsAccept]);
+    }
+
 }

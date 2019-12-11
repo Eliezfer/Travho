@@ -1,13 +1,17 @@
 <?php
 
 namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use App\BookingHouse;
+use App\House;
 
-class BookingHouseCreateRequest extends FormRequest
+class BookingHouseUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,26 +30,41 @@ class BookingHouseCreateRequest extends FormRequest
      */
     public function rules()
     {
+        $booking = $this->route('bookingHouse');
+        $house=House::findorfail($booking->house_id);
         
+        if($this->user()->id == $house->user_id ){
+            return [
+                'data.attributes.status'=> [
+                    'required',
+                    Rule::in(['accepted','rejected']),
+                ]
+            ];
+        }
         return [
-            //
             'data.attributes.check_in'=> 'required|before:data.attributes.check_out|after:today',
             'data.attributes.check_out' => 'required|after:data.attributes.check_in',
-            'data.attributes.house_id' => 'required|exists:houses,id'
+            'data.attributes.status'=> [
+                Rule::in(['canceled']),
+            ]
         ];
     }
-
     public function messages()
     {
+        if($this->user()->id == $house->user_id ){
+            return [
+                'data.attributes.status.required' => 'El status es requerido',
+                'data.attributes.status.in' => 'El status solo puede ser aceptado o rechazado'
+            ];
+        }
         return[
             'data.attributes.check_in.required' => 'La :attribute no es enviado en la solicitud',
             'data.attributes.check_in.before' => 'La :attribute debe ser una fecha antes del check_out',
             'data.attributes.check_in.after' => 'La :attribute debe ser una fecha despues de hoy',
             'data.attributes.check_out.required' => 'La :attribute no es enviado en la solicitud',
             'data.attributes.check_out.after' => 'La :attribute debe ser una fecha despues del check_in',
-            'data.attributes.house_id.required' => 'El :attribute no es enviado en la solicitud',
-            'data.attributes.house_id.exists' => 'El :attribute no existe'
-
+            'data.attributes.status.required' => 'El status es requerido',
+            'data.attributes.status.in' => 'El status solo puede ser cancelado'
         ];
     }
 
@@ -72,5 +91,4 @@ class BookingHouseCreateRequest extends FormRequest
              JsonResponse::HTTP_UNPROCESSABLE_ENTITY)
         );
     }
-
 }

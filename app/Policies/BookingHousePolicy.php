@@ -5,7 +5,8 @@ namespace App\Policies;
 use App\BookingHouse;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-
+use App\House;
+use Illuminate\Auth\Access\Response;
 
 class BookingHousePolicy
 {
@@ -32,7 +33,10 @@ class BookingHousePolicy
     public function view(User $user, BookingHouse $bookingHouse)
     {
         //
-        return $user->id == $bookingHouse->user_id;
+        $house=House::findorfail($bookingHouse->house_id);
+        return ($user->id == $bookingHouse->user_id) || ($user->id == $house->user_id)
+                ? Response::allow()
+                : Response::deny('Acción no autorizada, las reservaciones son privadas, no puede ver este booking');;
     }
 
     /**
@@ -41,10 +45,24 @@ class BookingHousePolicy
      * @param  \App\User  $user
      * @return mixed
      */
-    public function create(User $user)
+    public function create(User $user, House $house)
     {
-        //
-        return true;
+        return $user->id != $house->user_id
+                ? Response::allow()
+                : Response::deny('Acción no autorizada, no puede rentar su propia casa');
+    }
+
+    public function isHouseAvailable(User $user, $house){
+        return $house->status
+                ? Response::allow()
+                : Response::deny('Acción no autorizada, no puede rentar una casa dada de baja');
+    }
+
+    public function isHouseAvailableToTheDate(User $user, $bookingsAccept){
+        $isEmpty = $bookingsAccept->isEmpty();
+        return $isEmpty
+                ? Response::allow()
+                : Response::deny('Acción no autorizada, la casa ha sido rentada en esas fechas');
     }
 
     /**
@@ -56,44 +74,46 @@ class BookingHousePolicy
      */
     public function update(User $user, BookingHouse $bookingHouse)
     {
-        //
-
-        return $user->id == $bookingHouse->user_id;
+        $house=House::findorfail($bookingHouse->house_id);
+        return ($user->id == $bookingHouse->user_id) || ($user->id == $house->user_id);
     }
 
-    /**
-     * Determine whether the user can delete the booking house.
-     *
-     * @param  \App\User  $user
-     * @param  \App\BookingHouse  $bookingHouse
-     * @return mixed
-     */
-    public function delete(User $user, BookingHouse $bookingHouse)
+    public function updateBookingAccepted(User $user, BookingHouse $bookingHouse)
     {
-        //
+        return $bookingHouse->status!='accepted'
+                ? Response::allow()
+                : Response::deny('Acción no autorizada, no puede cambiar el estado de una renta aceptada');
+        ;
+    }
+    public function updateBookingCanceled(User $user, BookingHouse $bookingHouse)
+    {
+        return $bookingHouse->status!='canceled'
+                ? Response::allow()
+                : Response::deny('Acción no autorizada, la renta se cancelo no puedes cambiar el estado');
+        ;
     }
 
-    /**
-     * Determine whether the user can restore the booking house.
-     *
-     * @param  \App\User  $user
-     * @param  \App\BookingHouse  $bookingHouse
-     * @return mixed
-     */
-    public function restore(User $user, BookingHouse $bookingHouse)
+    public function updateBookingRejected(User $user, BookingHouse $bookingHouse)
     {
-        //
+        return $bookingHouse->status!='rejected'
+                ? Response::allow()
+                : Response::deny('Acción no autorizada, la renta se rechazo no puedes cambiar el estado');
+        ;
     }
 
-    /**
-     * Determine whether the user can permanently delete the booking house.
-     *
-     * @param  \App\User  $user
-     * @param  \App\BookingHouse  $bookingHouse
-     * @return mixed
-     */
-    public function forceDelete(User $user, BookingHouse $bookingHouse)
+    public function updatePastBookingDate(User $user, BookingHouse $bookingHouse)
     {
-        //
+        return $bookingHouse->check_in > now()
+                ? Response::allow()
+                : Response::deny('Acción no autorizada, No se puede actualizar reservaciones de fechas pasadas');
+        ;
     }
+
+    public function updateBookingToCancel(User $user, BookingHouse $bookingHouse){
+        $today = now();
+        $remainingDays = $today->diffInDays($bookingHouse->check_in);
+        return $remainingDays>'3' ? Response::allow()
+        : Response::deny('Acción no autorizada, El tiempo de cancelación ha pasado');
+    }
+
 }

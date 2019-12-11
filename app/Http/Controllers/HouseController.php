@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Address;
 use App\House;
 use App\User;
+use App\BookingHouse;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\HouseRequest;
@@ -61,19 +62,20 @@ class HouseController extends Controller
      */
     public function store(HouseRequest $request)
     {
-        //verifica que este autenticado
 
-
+        $query_string=$request->query();
         $data_address=$request['address'];
 
         $data_house=$request['data'];
         $address=Address::create($data_address);
         $data_house["address_id"]=$address['id'];
 
-       //obtener la id del usuario mediante su autenticación
-        $data_house["user_id"]='1';
-        $house=House::create($data_house);
+       //obtener la id del usuario mediante su token
+       $user= User::select('id')->where('api_token','=',$query_string['api_token'])->get()[0];
 
+       $data_house["user_id"]=$user['id'];
+
+        $house=House::create($data_house);
         return new HouseResource($house);
     }
 
@@ -111,7 +113,7 @@ class HouseController extends Controller
     {
       //verifica que este autenticado
 
-        $this->authorize('logout',$house);
+        $this->authorize('update',$house);
         $data_address=$request['address'];
         $data_house=$request['data'];
 
@@ -129,6 +131,11 @@ class HouseController extends Controller
      */
     public function destroy(House $house)
     {
-        //
+        $this->authorize('delete',$house);
+        $bookingHouse=BookingHouse::find(0);
+        return  $bookingHouse;
+        $house['status']=false;
+        $house->update();
+        return response("",204);
     }
 }
