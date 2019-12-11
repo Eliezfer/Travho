@@ -44,7 +44,6 @@ class House extends JsonResource
                 'data'=>[
                     'name'=>$this->user['name'],
                     'user'=>$this->user['user'],
-                    'password'=>$this->user['password'],
                     'birthdate'=>$this->user['birthdate'],
                     'cellphone'=>$this->user['cellphone'],
                     'email'=>$this->user['email']
