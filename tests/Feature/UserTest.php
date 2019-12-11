@@ -644,9 +644,9 @@ class UserTest extends TestCase
         $response = $this->json('POST',"api/v1/users/login", $userData);
 
         // THEN 
-        // Retornar código 200
+        // Retornar código 401
         
-        $response->assertStatus(200);
+        $response->assertStatus(401);
 
         $body = $response->decodeResponseJson();
 
@@ -654,10 +654,7 @@ class UserTest extends TestCase
         // email y password            
         $response->assertJson([
             'data' => [
-                'name' => $user->name,
-                'user' => $user->user,
-                'email' => $user->email,
-                'api_token' => $user->api_token,
+                'Password' => 'Incorrect',
             ]
         ]);
         }
