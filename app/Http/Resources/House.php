@@ -25,7 +25,6 @@ class House extends JsonResource
                 'description'=>$this->description,
                 'price_for_day'=>$this->price_for_day,
                 'status'=>$this->status,
-                'country'=>$this->country,
                 'state'=>$this->state,
                 'municipality'=>$this->municipality,
             ],

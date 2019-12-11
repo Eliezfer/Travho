@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\HouseTest;
 
 use App\House;
 use App\Address;
@@ -12,139 +12,11 @@ use Tests\TestCase;
 class HouseTest extends TestCase
 {
     use RefreshDatabase;
-     /**
-     * CREATE-1
-     */
-    public function test_user_can_create_a_house(){
-        //dado
-        $user = factory(User::class)->create();
-     $houseData =[
-            "data"=>[
-              "description"=> "new house",
-              "price_for_day"=> "22",
-              "status"=> "true",
-              "country"=> "mexico",
-              "state"=> "Yucatán",
-              "municipality"=> "Merida"
-            ]
-              ,
-            "address"=> [
-              "street"=> "29",
-              "cross_street1"=> "31",
-              "cross_street2"=> "33",
-              "house_number"=> "23",
-              "suburb"=> "centro",
-              "postcode"=> "97000"
-            ]
-            ];
-             //cuando
-        $response = $this->actingAs($user)->json('POST', '/api/v1/houses?api_token='.$user['api_token'], $houseData);
-            //entonces
-        $body = $response->decodeResponseJson();
-        $response->assertStatus(201);
-        //verificar la estructura devuelta
-        $response->assertJsonStructure([
-            'id',
-            'id_user',
-            'data'=>[
-                'description',
-                'price_for_day',
-                'status',
-                'country',
-                'state',
-                'municipality',
-            ],
-            'address'=>[
-                'street',
-                'cross_street1',
-                'cross_street2',
-                'house_number',
-                'suburb',
-                'postcode'
-            ],
-            'link'=>[
-                'self'
-            ],
-            'User'=>[
-                'data'=>[
-                    'name',
-                    'user',
-                    'birthdate',
-                    'cellphone',
-                    'email',
-                ],
-                'link'=>[
-                    'self'
-                ]
-            ]
-        ]);
-        $response->assertJson([
 
-                'id'=>$body['id'],
-                'id_user'=>$body['id_user'],
-                'data'=>[
-                    'description'=>$body['data']['description'],
-                    'price_for_day'=>$body['data']['price_for_day'],
-                    'status'=>$body['data']['status'],
-                    'country'=>$body['data']['country'],
-                    'state'=>$body['data']['state'],
-                    'municipality'=>$body['data']['municipality'],
-                ],
-                'address'=>[
-                    'street'=>$body['address']['street'],
-                    'cross_street1'=>$body['address']['cross_street1'],
-                    'cross_street2'=>$body['address']['cross_street2'],
-                    'house_number'=>$body['address']['house_number'],
-                    'suburb'=>$body['address']['suburb'],
-                    'postcode'=>$body['address']['postcode']
-                ],
-                'link'=>[
-                    'self'=>$body['link']['self']
-                ],
-                'User'=>[
-                    'data'=>[
-                        'name'=>$body['User']['data']['name'],
-                        'user'=>$body['User']['data']['user'],
-                        'birthdate'=>$body['User']['data']['birthdate'],
-                        'cellphone'=>$body['User']['data']['cellphone'],
-                        'email'=>$body['User']['data']['email'],
-                    ],
-                    'link'=>[
-                        'self'=>$body['User']['link']['self'],
-                    ]
-                ]
-            ]);
-            $this->assertDatabaseHas(
-             'houses'
-            ,[
-                'id'=>$body['id'],
-                'user_id'=>$body['id_user'],
-                'address_id'=>$body['id'],
-                'description'=>$body['data']['description'],
-                'price_for_day'=>$body['data']['price_for_day'],
-                'status'=>$body['data']['status'],
-                'country'=>$body['data']['country'],
-                'state'=>$body['data']['state'],
-                'municipality'=>$body['data']['municipality'],
-            ]);
-            $this->assertDatabaseHas(
-                'addresses'
-                ,[
-                    'id'=>$body['id'],
-                    'street'=>$body['address']['street'],
-                    'cross_street1'=>$body['address']['cross_street1'],
-                    'cross_street2'=>$body['address']['cross_street2'],
-                    'house_number'=>$body['address']['house_number'],
-                    'suburb'=>$body['address']['suburb'],
-                    'postcode'=>$body['address']['postcode']
-            ]);
-
-
-    }
      /**
      * UPDATE-1
      */
-    public function test_user_can_update_a_product()
+    public function test_user_can_update_a_house()
     {
 
         $user = factory(User::class)->create();
@@ -159,7 +31,6 @@ class HouseTest extends TestCase
               "description"=> "house",
               "price_for_day"=> "22",
               "status"=> "true",
-              "country"=> "mexico",
               "state"=> "Quintana Roo",
               "municipality"=> "Cancun"
             ]
@@ -184,7 +55,6 @@ class HouseTest extends TestCase
                     'description'=>$houseData['data']['description'],
                     'price_for_day'=>$houseData['data']['price_for_day'],
                     'status'=>$houseData['data']['status'],
-                    'country'=>$houseData['data']['country'],
                     'state'=>$houseData['data']['state'],
                     'municipality'=>$houseData['data']['municipality'],
                 ],
@@ -240,7 +110,7 @@ class HouseTest extends TestCase
                 'description'=>$house['description'],
                 'price_for_day'=>$house['price_for_day'],
                 'status'=>$house['status'],
-                'country'=>$house['country'],
+
                 'state'=>$house['state'],
                 'municipality'=>$house['municipality'],
             ],
@@ -294,7 +164,7 @@ class HouseTest extends TestCase
                'description'=>$house['description'],
                'price_for_day'=>$house['price_for_day'],
                'status'=>$house['status'],
-               'country'=>$house['country'],
+
                'state'=>$house['state'],
                'municipality'=>$house['municipality'],
            ]);
@@ -310,7 +180,9 @@ class HouseTest extends TestCase
                    'postcode'=>$address['postcode']
            ]);
     }
-
+    /**
+     * LIST-1
+     */
     public function test_user_can_show_a_list_of_houses(){
 
         $user = factory(User::class,2)->create();
@@ -334,7 +206,7 @@ class HouseTest extends TestCase
                 'description',
                 'price_for_day',
                 'status',
-                'country',
+
                 'state',
                 'municipality',
             ],
@@ -353,7 +225,6 @@ class HouseTest extends TestCase
                 'data'=>[
                     'name',
                     'user',
-                    'password',
                     'birthdate',
                     'cellphone',
                     'email',
@@ -364,8 +235,18 @@ class HouseTest extends TestCase
             ]
         ]]]);
     }
+    /**
+     * LIST-2
+     */
+    public function test_user_can_show_a_list_without_houses(){
 
 
+        $response= $this->GET('/api/v1/houses/');
+
+        $response->assertStatus(200);
+
+        $response->assertJsonStructure(['data'=>[]]);
+    }
     /**
      * A basic feature test example.
      *
