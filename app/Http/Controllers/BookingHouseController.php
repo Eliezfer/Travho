@@ -82,7 +82,7 @@ class BookingHouseController extends Controller
     public function edit(BookingHouse $bookingHouse)
     {
         //
-        
+
     }
 
     /**
@@ -106,7 +106,7 @@ class BookingHouseController extends Controller
         if(auth()->user()->id == $bookingHouse->user_id){
             echo 'ddd';
         }
-        
+
 
 
         /*/BookingHouse->status()

@@ -25,14 +25,14 @@ class House extends JsonResource
                 'description'=>$this->description,
                 'price_for_day'=>$this->price_for_day,
                 'status'=>$this->status,
-                'country'=>$this->coutry,
+                'country'=>$this->country,
                 'state'=>$this->state,
                 'municipality'=>$this->municipality,
             ],
             'address'=>[
                 'street'=>$this->address['street'],
-                'crossStreet1'=>$this->address['cross_street1'],
-                'crossStreet2'=>$this->address['cross_street2'],
+                'cross_street1'=>$this->address['cross_street1'],
+                'cross_street2'=>$this->address['cross_street2'],
                 'house_number'=>$this->address['house_number'],
                 'suburb'=>$this->address['suburb'],
                 'postcode'=>$this->address['postcode']
