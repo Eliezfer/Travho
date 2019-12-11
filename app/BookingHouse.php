@@ -16,7 +16,7 @@ class BookingHouse extends Model
     ];
 
  
-    public function scopeHouseBokings($query) 
+    public function scopeMyBokings($query) 
     {
       return $query->where('user_id', auth()->user()->id )
             ->orderBy('id','DESC')
@@ -26,23 +26,26 @@ class BookingHouse extends Model
     public function scopeBookingsOfYourHouse($query) 
     {
       return $query->join('houses','booking_houses.house_id','=','houses.id')
-                   ->where('houses.user_id',auth()->user()->id)
-                   ->select('booking_houses.*')
-                   ->paginate(1);
-            ;
+            ->where('houses.user_id',auth()->user()->id)
+            ->select('booking_houses.*')
+            ->paginate(1);
     }
 
     public function scopeBookingsAccept($query, $houseID){
       return $query ->where('house_id', $houseID)
-                    ->where('status', 'accepted');
+            ->where('status', 'accepted');
                     
     }
 
     public function scopeBookingsBetweenDate($query, $checkIn, $checkOut){
       return $query ->whereBetween('check_in', [$checkIn,$checkOut])
-                    ->orWhereBetween('check_out', [$checkIn,$checkOut]);
+            ->orWhereBetween('check_out', [$checkIn,$checkOut]);
     }
 
+    public function scopeUpdateBookingsToCancel($query, $houseID){
+      return $query  ->where('house_id', $houseID)
+            ->update(['status'=>'canceled']);
+    }
     
 
   /**

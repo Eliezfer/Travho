@@ -4,9 +4,11 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\House as HouseResource;
+use App\Http\Resources\User as UserResource;
 use App\House;
+use App\User;
 
-class BookingHouseResource extends JsonResource
+class BookingHouse extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,6 +20,8 @@ class BookingHouseResource extends JsonResource
     {
         $house=House::findorfail($this->house_id);
         $houseResource = new HouseResource($house);
+        $user = User::findorfail($this->user_id);
+        $userResource = new UserResource($user);
         return [
             'type' => 'bookings house',
             'id' => $this->id,
@@ -30,6 +34,7 @@ class BookingHouseResource extends JsonResource
                 'status' => $this->status,
             ],
             'house' => $houseResource,
+            'user' => $userResource,
             'link' =>  ['self' => route('bookings', $this->id)]
 
         ];

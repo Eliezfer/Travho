@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class BookingHouseResourceCollection extends ResourceCollection
+class BookingHouseCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -15,7 +15,7 @@ class BookingHouseResourceCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'data'=> BookingHouseResource::collection($this->collection),
+            'data'=> BookingHouse::collection($this->collection),
         ];
     }
 }
