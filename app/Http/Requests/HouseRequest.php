@@ -64,7 +64,6 @@ class HouseRequest extends FormRequest
             'data.description'=>'required',
             'data.price_for_day'=>'numeric|gt:0|required',
             'data.status'=>'required',
-            'data.country'=>'required',
             'data.state'=>'required|in:'.implode(',', $this->states),
             'data.municipality'=>'required',
 
