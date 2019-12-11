@@ -134,7 +134,7 @@ class HouseController extends Controller
     {
         $this->authorize('delete',$house);
         //Busca los booking de las casas a eliminar y los cancela
-        $h=BookingHouse::where('house_id','=',$house['id'])
+        BookingHouse::where('house_id','=',$house['id'])
         ->where('status','=','in process')
         ->update(['status'=>'rejected']);
         //da de baja la casa
