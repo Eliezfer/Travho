@@ -31,8 +31,8 @@ class House extends JsonResource
             ],
             'address'=>[
                 'street'=>$this->address['street'],
-                'crossStreet1'=>$this->address['cross_street1'],
-                'crossStreet2'=>$this->address['cross_street2'],
+                'cross_street1'=>$this->address['cross_street1'],
+                'cross_street2'=>$this->address['cross_street2'],
                 'house_number'=>$this->address['house_number'],
                 'suburb'=>$this->address['suburb'],
                 'postcode'=>$this->address['postcode']
