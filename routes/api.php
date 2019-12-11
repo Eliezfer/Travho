@@ -39,26 +39,19 @@ Route::middleware('auth:api')->post('/houses', 'HouseController@store');
 Route::get('/houses/{house}','HouseController@show');
 Route::middleware('auth:api')->put('/houses/{house}', 'HouseController@update');
 
+
 // Login
-Route::POST('users/login', 'UserController@login');
-
-
-
+Route::POST('v1/users/login', 'UserController@login');
 // Logout
-Route::middleware('auth:api')->post('users/logout', 'UserController@logout');
-
+Route::middleware('auth:api')->post('v1/users/logout', 'UserController@logout');
 // Returns the list of registered users
 //Route::GET('users', "UserController@index")->middleware('auth');
-
 // Create a user
-Route::POST('users', "UserController@store");
+Route::POST('v1/users', "UserController@store");
 // Return a User by ID
-Route::middleware('auth:api')->get('users/{user}', "UserController@show");
-
-
+Route::middleware('auth:api')->get('v1/users/{user}', "UserController@show");
 // Update user by ID
-Route::middleware('auth:api')->put('users/{user}', "UserController@update");
-
+Route::middleware('auth:api')->put('v1/users/{user}', "UserController@update");
 // Delete a user
-Route::middleware('auth:api')->delete('users/{user}', "UserController@destroy");
-
+Route::middleware('auth:api')->delete('v1/users/{user}', "UserController@destroy");
+//Route::Delete('users/{user}', "UserController@destroy");

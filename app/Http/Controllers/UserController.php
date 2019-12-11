@@ -201,11 +201,12 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request,$id,User $user)
+    public function destroy(Request $request,User $user)
     {
         // Borrar booking y houses 
         // filtro H
-        $houses=House::where('user_id','=',$id)->get();
+         //$houses=House::where('user_id','=',$id)->get();
+        // return $houses;
         //foreach $house as
         //    update()  status (false)
 

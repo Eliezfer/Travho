@@ -43,11 +43,11 @@ class UserRequest extends FormRequest
     {
         return [
             //
-            'data.name'              =>  'required',
+            'data.name'              =>  'required ',
             'data.user'              =>  'required',
             'data.password'          =>  'required', // Mayor a tal número
             'data.cellphone'         =>  'required',
-            'data.email'             =>  'required ',
+            'data.email'             =>  'required | email ',
             'data.birthdate'         =>  'required',
         ];
     }
