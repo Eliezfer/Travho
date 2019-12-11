@@ -75,7 +75,8 @@ class BookingHousePolicy
     public function update(User $user, BookingHouse $bookingHouse)
     {
         $house=House::findorfail($bookingHouse->house_id);
-        return ($user->id == $bookingHouse->user_id) || ($user->id == $house->user_id);
+        return ($user->id == $bookingHouse->user_id) || ($user->id == $house->user_id)? Response::allow()
+        : Response::deny('Acción no autorizada, las reservaciones son privadas, no puede actualizar este booking');
     }
 
     public function updateBookingAccepted(User $user, BookingHouse $bookingHouse)
