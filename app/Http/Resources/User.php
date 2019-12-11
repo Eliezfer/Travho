@@ -21,12 +21,12 @@ class User extends JsonResource
         return[
             'id' => $this->id,
             'data' => [
-            'nombre'    => $this->name,
-            'usuario'   => $this->user,
+            'name'    => $this->name,
+            'user'   => $this->user,
             //'password'  => $this->password,
-            'date'      => $this->birthdate, // 1/05/1998
-            'teléfono'  => $this->cellphone,
-            'correo'    => $this->email,
+            'birthdate'      => $this->birthdate, // 1/05/1998
+            'cellphone'  => $this->cellphone,
+            'email'    => $this->email,
             //'api_token' => $this->api_token,
             ],
         'link' =>[
