@@ -39,10 +39,14 @@ class UserController extends Controller
                 'api_token' => $user->api_token
                 ]
             ], 200);
+        }elseif($user && ($data['password'] != $user->password )){
+            return response()->json([
+                'data' => [
+                'Password' => 'Incorrect',
+                ]
+            ], 401); // *** CAMBIAR ERROR HTTP
         }
     }
-
-
     public function logout(AuthRequest $request){
         $data = $request['data'];
         // Se filtra por email
