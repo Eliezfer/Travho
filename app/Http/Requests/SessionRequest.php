@@ -37,18 +37,13 @@ class UserRequest extends FormRequest
      * @return array
      */
 
-     // DATE_FORMAT (DATETIME CLASS)
-     // email:rfc
+
     public function rules()
     {
         return [
             //
-            'data.name'              =>  'required ',
-            'data.user'              =>  'required',
-            'data.password'          =>  'required', 
-            'data.cellphone'         =>  'required | numeric',
             'data.email'             =>  'required | email ',
-            'data.birthdate'         =>  'required | Date ',
+            'data.password'          =>  'required',
         ];
     }
 }

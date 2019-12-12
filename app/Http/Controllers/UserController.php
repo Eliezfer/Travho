@@ -37,9 +37,14 @@ class UserController extends Controller
                 'api_token' => $user->api_token
                 ]
             ], 200);
+        }elseif($user && ($data['password'] != $user->password )){
+            return response()->json([
+                'data' => [
+                'Password' => 'Incorrect',
+                ]
+            ], 401); // *** CAMBIAR ERROR HTTP
         }
     }
-
     public function logout(AuthRequest $request){
         $data = $request['data'];
         // Se filtra por email
@@ -192,7 +197,7 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request,$id,User $user)
+    public function destroy(Request $request,User $user)
     {
         $this->authorize('delete',$user);
        // $header = $request->header('api_token');
