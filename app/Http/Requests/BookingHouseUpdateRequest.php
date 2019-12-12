@@ -51,6 +51,8 @@ class BookingHouseUpdateRequest extends FormRequest
     }
     public function messages()
     {
+        $booking = $this->route('bookingHouse');
+        $house=House::findorfail($booking->house_id);
         if($this->user()->id == $house->user_id ){
             return [
                 'data.attributes.status.required' => 'El status es requerido',

@@ -17,7 +17,8 @@ class BookingHouseListTest extends TestCase
      *
      * @return void
      */
-
+    use RefreshDatabase;
+    
     public function test_traveler_can_list_your_bookings()
     {
         $user = factory(User::class)->create();        
