@@ -98,8 +98,6 @@ class BookingHouseController extends Controller
             $bookingHouse->status = $statusRequest;
         }
         if(auth()->user()->id == $bookingHouse->user_id){
-            $this->authorize('updateBookingRejected',$bookingHouse);
-
             if(($statusRequest == 'canceled') && ($bookingHouse->status == 'accepted') ){
                 $this->authorize('updateBookingToCancel',$bookingHouse);
                 $bookingHouse->status = $statusRequest;
@@ -136,6 +134,7 @@ class BookingHouseController extends Controller
 
     public function authorizeUpdate($bookingHouse){
         $this->authorize('update',$bookingHouse);
+        $this->authorize('updateBookingRejected',$bookingHouse);
         $this->authorize('updatePastBookingDate',$bookingHouse);
         $this->authorize('updateBookingCanceled',$bookingHouse);
     }
