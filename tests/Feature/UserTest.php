@@ -6,22 +6,13 @@ use Illuminate\Support\Str;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illumintae\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Validator;
 
 class UserTest extends TestCase
 {
     use RefreshDatabase;
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function testExample()
-    {
-
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
     /**
      *  CREATE-1
      */
@@ -53,11 +44,11 @@ class UserTest extends TestCase
           $response->assertJson([
                 'id' => 1,
                 'data' => [
-                    'nombre' => 'Alejandro',
-                    'usuario' => 'AGC',
-                    'date' => '2/12/97',
-                    'teléfono' => '5435678',
-                    'correo' =>'agcfinal1.0@gmail.com',
+                    'name' => 'Alejandro',
+                    'user' => 'AGC',
+                    'birthdate' => '2/12/97',
+                    'cellphone' => '5435678',
+                    'email' =>'agcfinal1.0@gmail.com',
                 ],
                 'link' => [
                     "self" => env("APP_URL").':8000/api/v1/users/1',
@@ -67,11 +58,11 @@ class UserTest extends TestCase
         // Se asegura que el usuario fue creado 
         // con la información correcta 
         $response->assertJsonFragment([
-            'nombre' => 'Alejandro',
-            'usuario' => 'AGC',
-            'date' => '2/12/97',
-            'teléfono' => '5435678',
-            'correo' =>'agcfinal1.0@gmail.com',
+            'name' => 'Alejandro',
+            'user' => 'AGC',
+            'birthdate' => '2/12/97',
+            'cellphone' => '5435678',
+            'email' =>'agcfinal1.0@gmail.com',
         ]);
         // Se decodifica el body
         $body = $response->decodeResponseJson();
@@ -624,4 +615,47 @@ class UserTest extends TestCase
      * LOGIN-4
      * Password Incorrect
      */
+    public function test_client_send_wrong_password()
+    {
+
+        //Given 
+
+        // Existe una representación en la base de datos 
+        $user = factory(User::class)->create([
+                'email' => 'agcfinal1.0@gmail.com',
+                'user' => 'AGC',
+                'name' => 'Alejandro',
+                'password' => '12345',
+                'api_token' => Str::random(80),
+            ]);
+        
+        
+        // El cliente tiene una representación del usuario para loguearse en la API
+        // Request Body
+            $userData = [
+                'data' => [
+                    'email' => 'agcfinal1.0@gmail.com', 
+                    'password' => '12', 
+                ]
+            ];
+
+                // WHEN
+        // Se envía un request con la información necesaria para loguear un usuario
+        $response = $this->json('POST',"api/v1/users/login", $userData);
+
+        // THEN 
+        // Retornar código 401
+        
+        $response->assertStatus(401);
+
+        $body = $response->decodeResponseJson();
+
+        // Asegurar que el usuario es correcto, verificando su 
+        // email y password            
+        $response->assertJson([
+            'data' => [
+                'Password' => 'Incorrect',
+            ]
+        ]);
+        }
 }

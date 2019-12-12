@@ -43,7 +43,7 @@ class UserRequest extends FormRequest
     {
         return [
             //
-            'data.name'              =>  'required',
+            'data.name'              =>  'required ',
             'data.user'              =>  'required',
             'data.password'          =>  'required', 
             'data.cellphone'         =>  'required | numeric',
