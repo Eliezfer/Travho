@@ -10,7 +10,7 @@ use App\House;
 use App\Address;
 use App\User;
 
-class BookinHouseCreateTest extends TestCase
+class BookingHouseCreateTest extends TestCase
 {
     /**
      * A basic feature test example.
@@ -22,10 +22,10 @@ class BookinHouseCreateTest extends TestCase
 
     public function test_client_can_create_a_booking(){
         //dado
-        $userTraveled = factory(User::class)->create();
+        $traveler = factory(User::class)->create();
         $house = factory(House::class)->create();
         $address = Address::find($house->address_id);
-        $userHost = User::find($house->user_id);
+        $host = User::find($house->user_id);
         $bookingData = [
             "data" => [
                 "type" => "bookings house",
@@ -36,10 +36,9 @@ class BookinHouseCreateTest extends TestCase
                 ]
             ]
         ];
-        $response = $this->actingAs($userTraveled)->json('POST', '/api/v1/bookings?api_token='.$userTraveled['api_token'], $bookingData);
+        $response = $this->actingAs($traveler)->json('POST', '/api/v1/bookings?api_token='.$traveler['api_token'], $bookingData);
         $response->assertStatus(201);
-        $body = $response->decodeResponseJson();
-       $response->assertJsonStructure([
+        $response->assertJsonStructure([
             'data'=> [
                 'type',
                 'id',
@@ -57,7 +56,6 @@ class BookinHouseCreateTest extends TestCase
                         'description',
                         'price_for_day',
                         'status',
-                        'country',
                         'state',
                         'municipality',
                     ],
@@ -85,7 +83,7 @@ class BookinHouseCreateTest extends TestCase
                         ]
                     ]
                 ],
-                'user'=>[
+                'traveler'=>[
                     'id',
                     'data'=>[
                         'name',
@@ -110,7 +108,7 @@ class BookinHouseCreateTest extends TestCase
             'data'=> [
                 'type' => 'bookings house',
                 'id' => $body['data']['id'],
-                'user_id' => $userTraveled->id,
+                'user_id' => $traveler->id,
                 'house_id' => $house->id,
                 'attributes' => [
                     'check_in' => '2019-12-25 15:00:00',
@@ -124,7 +122,6 @@ class BookinHouseCreateTest extends TestCase
                         'description'=> $house->description,
                         'price_for_day'=> "$house->price_for_day",
                         'status' => $house->status,
-                        'country' => $house->country,
                         'state' => $house->state,
                         'municipality' => $house->municipality,
                     ],
@@ -141,28 +138,28 @@ class BookinHouseCreateTest extends TestCase
                     ],
                     'User'=>[
                         'data'=>[
-                            'name'=>$userHost->name,
-                            'user'=> $userHost->user,
-                            'birthdate' => $userHost->birthdate,
-                            'cellphone' => $userHost->cellphone,
-                            'email' => $userHost->email
+                            'name'=>$host->name,
+                            'user'=> $host->user,
+                            'birthdate' => $host->birthdate,
+                            'cellphone' => $host->cellphone,
+                            'email' => $host->email
                         ],
                         'link'=>[
                             'self' => $body['data']['house']['User']['link']['self']
                         ]
                     ]
                 ],
-                'user'=>[
-                    'id'=> $userTraveled->id,
+                'traveler'=>[
+                    'id'=> $traveler->id,
                     'data'=>[
-                        'name'=>$userTraveled->name,
-                        'user'=>$userTraveled->user,
-                        'birthdate'=>$userTraveled->birthdate,
-                        'cellphone'=>$userTraveled->cellphone,
-                        'email' => $userTraveled->email,
+                        'name'=>$traveler->name,
+                        'user'=>$traveler->user,
+                        'birthdate'=>$traveler->birthdate,
+                        'cellphone'=>$traveler->cellphone,
+                        'email' => $traveler->email,
                     ],
                     'link'=>[
-                        'self'=> $body['data']['user']['link']['self']
+                        'self'=> $body['data']['traveler']['link']['self']
                     ]
                 ],
                 'link'=>[
@@ -175,7 +172,7 @@ class BookinHouseCreateTest extends TestCase
             'booking_houses',
             [
                 'id' => $body['data']['id'],
-                'user_id' => $userTraveled->id,
+                'user_id' => $traveler->id,
                 'house_id' => $house->id,
                 'check_in' => '2019-12-25 15:00:00',
                 'check_out' => '2019-12-25 16:00:00',
