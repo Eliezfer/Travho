@@ -11,13 +11,10 @@ use Illuminate\Support\Str;
 use Illuminate\Auth\AuthenticationException;
 use App\Http\Requests\AuthRequest;
 
+
 class UserController extends Controller
 {
 
-    // public function __construct()
-    // {
-    //     $this->middleware('auth:api');
-    // }
     /**
      *  User login
      *
@@ -26,48 +23,65 @@ class UserController extends Controller
         $data = $request['data'];
         // Se filtra por email
         $user = User::where('email', $data['email'])->first();
-
-        // Se verifica el email y el password
-        if($user && ($data['password'] == $user->password )){
-            return response()->json([
-                'data' => [
-                'name' => $user->name,
-                'user' => $user->user,
-                'email' => $user->email,
-                'api_token' => $user->api_token
-                ]
-            ], 200);
-        }elseif($user && ($data['password'] != $user->password )){
-            return response()->json([
-                'data' => [
-                'Password' => 'Incorrect',
-                ]
-            ], 401); // *** CAMBIAR ERROR HTTP
+        // Se muestra solamente usuarios activos
+        dd($user->status);
+        if($user->status){
+            // Se verifica el email y el password
+            if($user && ($data['password'] == $user->password )){
+                return response()->json([
+                    'data' => [
+                    'name' => $user->name,
+                    'user' => $user->user,
+                    'email' => $user->email,
+                    'api_token' => $user->api_token
+                    ],
+                    'link' => [
+                        'self' => config('app.url').":8000/api/v1/users/".$this->id,
+                    ]
+                ], 200);
+                // Su contraseña no coincide
+            }elseif($user && ($data['password'] != $user->password )){
+                throw new AuthenticationException();
+                // No existe usuario en la base de datos
+            }elseif($user == null){
+                throw new AuthenticationException();
+            }
+        }elseif(!$user->status){
+            throw new ModelNotFoundException();
         }
+            
     }
     public function logout(AuthRequest $request){
+        // Se obtiene el request
         $data = $request['data'];
         // Se filtra por email
         $user = User::where('email', $data['email'])->first();
+
       // Se verifica el email y el password
       // Solamente el usuario puede cerrar su sesión
-
         $this->authorize('logout',$user);
 
-
-        // Se verifica el email y el password
-        if($user && ($data['password'] == $user->password )){
-
-            $data = [
-             'api_token'  =>  Str::random(80),
-            ];
-            $user->update($data);
-            return response()->json([
-                "Sesión: " => "Logout",
-                "api_token" => $user->api_token,
-            ], 200);
+        if($user->status){
+            // Se verifica el email y el password
+            if($user && ($data['password'] == $user->password )){
+                // Se modifica el Token del usuario para que se vea 
+                //obligado a inciar sesión
+                $data = [
+                'api_token'  =>  Str::random(80),
+                ];
+                $user->update($data);
+                return response()->json([
+                    "Sesión: " => "Logout",
+                    "api_token" => $user->api_token,
+                ], 200);
+            
+            }else{
+                // Contraseña o usuario erróneo
+                throw new AuthenticationException();
+            }
+        }else{ // User Status está en falso [dado de baja]
+            throw new ModelNotFoundException();
         }
-
     }
 
     /**
@@ -78,10 +92,10 @@ class UserController extends Controller
      */
     public function index( Request $request)
     {
-        $header = $request->header('api_token');
-        // $users = User::all();
-        // return response()->json($users,200);
-        return UserResource::collection(User::all());
+        // $header = $request->header('api_token');
+        // // $users = User::all();
+        // // return response()->json($users,200);
+        // return UserResource::collection(User::all());
     }
 
     /**
@@ -102,16 +116,14 @@ class UserController extends Controller
      */
     protected function store(UserRequest $request)
     {
-
+  
         // Get data from JSON
         $data = $request['data'];
 
-        // Generate Token API
-
-        // Create a new product
-        // PASSWORD
+        // Se crea el modelo de un usuario
+        // Se genera el Token asociado al usuario
         $user = User::create([
-           'name' => $data['name'],
+        'name' => $data['name'],
             'user' => $data['user'],
             'password' => $data['password'],
             'cellphone' => $data['cellphone'],
@@ -124,6 +136,7 @@ class UserController extends Controller
         $user->save();
         //Return the JSON with specific Structure
         return new UserResource($user);
+
     }
 
     /**
@@ -134,15 +147,16 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        // MOSTRAR SOLAMENTE SI ES ACTIVO
 
-        //
-        //$header = $request->header('api_token');
-        //
         // Se busca el usuario en tabla
-        // Handler
-         //$user = user::findOrFail($id);
+
         // Se retorna el usuario solicitado, con la representación adecuada
-        return new UserResource($user);
+        if($user->status){
+             return new UserResource($user);
+        }elseif(!$user->status){
+            throw new ModelNotFoundException();
+        }
     }
 
     /**
@@ -165,6 +179,7 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, User $user)
     {
+        // SOLAMENTE SI ESTÁ ACTIVO
         $this->authorize('update',$user);
         //$this->middleware('auth:api');
         // Solamente el usuario puede actualizar su información [Policies]
@@ -199,11 +214,25 @@ class UserController extends Controller
      */
     public function destroy(Request $request,User $user)
     {
+        // COLOCAR FALSE 
         $this->authorize('delete',$user);
+
+        BookingHouse::where('user_id', '=',$user->id)
+        ->where('status','=','in process')
+        ->update(['status' => 'rejected']);
+
+        House::where('user_id','=',$user->id)
+        ->where('status','=','true')
+        ->update(['status' => 'false']);    
+
        // $header = $request->header('api_token');
         // Solamente el mismo usuario puede destruir su usuario
         //$userToDestroy = User::findOrFail($id);
-        $user->delete();
+
+        // Cambiar el estado Status a False [No borrar]
+        $user->update(['status' => 'true']);
+        //$user->delete();
+        
         return response(null,204);
     }
 
