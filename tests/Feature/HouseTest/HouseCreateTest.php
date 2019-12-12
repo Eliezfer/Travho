@@ -13,27 +13,31 @@ class HouseCreateTest extends TestCase
              /**
      * CREATE-1
      */
-    public function test_user_can_create_a_house(){
+    public function test_user_can_create_a_house()
+    {
         //dado
         $user = factory(User::class)->create();
+
      $houseData =[
             "data"=>[
+                "type"=>"house",
+                "attributes"=>[
               "description"=> "new house",
               "price_for_day"=> "22",
               "status"=> "true",
               "state"=> "Yucatán",
-              "municipality"=> "Merida"
+              "municipality"=> "Merida",
+                ],
+              "address"=> [
+                "street"=> "29",
+                "cross_street1"=> "31",
+                "cross_street2"=> "33",
+                "house_number"=> "23",
+                "suburb"=> "centro",
+                "postcode"=> "97000"
+              ]
             ]
-              ,
-            "address"=> [
-              "street"=> "29",
-              "cross_street1"=> "31",
-              "cross_street2"=> "33",
-              "house_number"=> "23",
-              "suburb"=> "centro",
-              "postcode"=> "97000"
-            ]
-            ];
+        ];
              //cuando
         $response = $this->actingAs($user)->json('POST', '/api/v1/houses?api_token='.$user['api_token'], $houseData);
             //entonces
@@ -74,6 +78,7 @@ class HouseCreateTest extends TestCase
                 ]
             ]
         ]);
+        //verificar la respuesta
         $response->assertJson([
 
                 'id'=>$body['id'],
@@ -109,6 +114,7 @@ class HouseCreateTest extends TestCase
                     ]
                 ]
             ]);
+            //verificar que se encuentre en la base de datos
             $this->assertDatabaseHas(
              'houses'
             ,[
@@ -141,24 +147,26 @@ class HouseCreateTest extends TestCase
     public function test_user_can_create_a_house_is_not_authenticate(){
         //dado
 
-     $houseData =[
+        $houseData =[
             "data"=>[
+                "type"=>"house",
+                "attributes"=>[
               "description"=> "new house",
               "price_for_day"=> "22",
               "status"=> "true",
               "state"=> "Yucatán",
-              "municipality"=> "Merida"
+              "municipality"=> "Merida",
+                ],
+              "address"=> [
+                "street"=> "29",
+                "cross_street1"=> "31",
+                "cross_street2"=> "33",
+                "house_number"=> "23",
+                "suburb"=> "centro",
+                "postcode"=> "97000"
+              ]
             ]
-              ,
-            "address"=> [
-              "street"=> "29",
-              "cross_street1"=> "31",
-              "cross_street2"=> "33",
-              "house_number"=> "23",
-              "suburb"=> "centro",
-              "postcode"=> "97000"
-            ]
-            ];
+        ];
              //cuando
         $response = $this->json('POST','/api/v1/houses?api_token=1', $houseData);
             //entonces
@@ -180,23 +188,25 @@ class HouseCreateTest extends TestCase
     public function test_user_can_create_a_house_price_for_day_is_not_a_number(){
         $user = factory(User::class)->create();
         $houseData =[
-               "data"=>[
-                 "description"=> "new house",
-                 "price_for_day"=> "d",
-                 "status"=> "true",
-                 "state"=> "Yucatán",
-                 "municipality"=> "Merida"
-               ]
-                 ,
-               "address"=> [
-                 "street"=> "29",
-                 "cross_street1"=> "31",
-                 "cross_street2"=> "33",
-                 "house_number"=> "23",
-                 "suburb"=> "centro",
-                 "postcode"=> "97000"
-               ]
-               ];
+            "data"=>[
+                "type"=>"house",
+                "attributes"=>[
+              "description"=> "new house",
+              "price_for_day"=> "d",
+              "status"=> "true",
+              "state"=> "Yucatán",
+              "municipality"=> "Merida",
+                ],
+              "address"=> [
+                "street"=> "29",
+                "cross_street1"=> "31",
+                "cross_street2"=> "33",
+                "house_number"=> "23",
+                "suburb"=> "centro",
+                "postcode"=> "97000"
+              ]
+            ]
+        ];
                 //cuando
            $response = $this->actingAs($user)->json('POST', '/api/v1/houses?api_token='.$user['api_token'], $houseData);
                //entonces
@@ -219,23 +229,25 @@ class HouseCreateTest extends TestCase
     public function test_user_can_create_a_house_price_for_day_is_less_than_0(){
         $user = factory(User::class)->create();
         $houseData =[
-               "data"=>[
-                 "description"=> "new house",
-                 "price_for_day"=> "-3",
-                 "status"=> "true",
-                 "state"=> "belga",
-                 "municipality"=> "Merida"
-               ]
-                 ,
-               "address"=> [
-                 "street"=> "29",
-                 "cross_street1"=> "31",
-                 "cross_street2"=> "33",
-                 "house_number"=> "23",
-                 "suburb"=> "centro",
-                 "postcode"=> "w"
-               ]
-               ];
+            "data"=>[
+                "type"=>"house",
+                "attributes"=>[
+              "description"=> "new house",
+              "price_for_day"=> "-3",
+              "status"=> "true",
+              "state"=> "Yucatán",
+              "municipality"=> "Merida",
+                ],
+              "address"=> [
+                "street"=> "29",
+                "cross_street1"=> "31",
+                "cross_street2"=> "33",
+                "house_number"=> "23",
+                "suburb"=> "centro",
+                "postcode"=> "97000"
+              ]
+            ]
+        ];
                 //cuando
            $response = $this->actingAs($user)->json('POST', '/api/v1/houses?api_token='.$user['api_token'], $houseData);
                //entonces
@@ -258,23 +270,25 @@ class HouseCreateTest extends TestCase
     public function test_user_can_create_a_house_state_is_not_a_of_mexico(){
         $user = factory(User::class)->create();
         $houseData =[
-               "data"=>[
-                 "description"=> "new house",
-                 "price_for_day"=> "22",
-                 "status"=> "true",
-                 "state"=> "belga",
-                 "municipality"=> "Merida"
-               ]
-                 ,
-               "address"=> [
-                 "street"=> "29",
-                 "cross_street1"=> "31",
-                 "cross_street2"=> "33",
-                 "house_number"=> "23",
-                 "suburb"=> "centro",
-                 "postcode"=> "97000"
-               ]
-               ];
+            "data"=>[
+                "type"=>"house",
+                "attributes"=>[
+              "description"=> "new house",
+              "price_for_day"=> "22",
+              "status"=> "true",
+              "state"=> "belga",
+              "municipality"=> "Merida",
+                ],
+              "address"=> [
+                "street"=> "29",
+                "cross_street1"=> "31",
+                "cross_street2"=> "33",
+                "house_number"=> "23",
+                "suburb"=> "centro",
+                "postcode"=> "97000"
+              ]
+            ]
+        ];
                 //cuando
            $response = $this->actingAs($user)->json('POST', '/api/v1/houses?api_token='.$user['api_token'], $houseData);
                //entonces
@@ -297,23 +311,25 @@ class HouseCreateTest extends TestCase
     public function test_user_can_create_a_house_postcode_is_not_a_number(){
         $user = factory(User::class)->create();
         $houseData =[
-               "data"=>[
-                 "description"=> "new house",
-                 "price_for_day"=> "22",
-                 "status"=> "true",
-                 "state"=> "belga",
-                 "municipality"=> "Merida"
-               ]
-                 ,
-               "address"=> [
-                 "street"=> "29",
-                 "cross_street1"=> "31",
-                 "cross_street2"=> "33",
-                 "house_number"=> "23",
-                 "suburb"=> "centro",
-                 "postcode"=> "w"
-               ]
-               ];
+            "data"=>[
+                "type"=>"house",
+                "attributes"=>[
+              "description"=> "new house",
+              "price_for_day"=> "22",
+              "status"=> "true",
+              "state"=> "Yucatán",
+              "municipality"=> "Merida",
+                ],
+              "address"=> [
+                "street"=> "29",
+                "cross_street1"=> "31",
+                "cross_street2"=> "33",
+                "house_number"=> "23",
+                "suburb"=> "centro",
+                "postcode"=> "we"
+              ]
+            ]
+        ];
                 //cuando
            $response = $this->actingAs($user)->json('POST', '/api/v1/houses?api_token='.$user['api_token'], $houseData);
                //entonces

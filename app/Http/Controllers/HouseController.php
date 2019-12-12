@@ -65,9 +65,8 @@ class HouseController extends Controller
     {
 
         $query_string=$request->query();
-        $data_address=$request['address'];
-
-        $data_house=$request['data'];
+        $data_address=$request['data']['address'];
+        $data_house=$request['data']['attributes'];
         $address=Address::create($data_address);
         $data_house["address_id"]=$address['id'];
 
@@ -119,8 +118,8 @@ class HouseController extends Controller
       //verifica que este autenticado
         $this->authorize('update',$house);
 
-        $data_address=$request['address'];
-        $data_house=$request['data'];
+        $data_address=$request['data']['address'];
+        $data_house=$request['data']['attributes'];
 
         $house->update($data_house);
         $house->address->update($data_address);

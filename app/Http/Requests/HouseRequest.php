@@ -61,19 +61,25 @@ class HouseRequest extends FormRequest
         'Zacatecas');
 
         return [
-            'data.description'=>'required',
-            'data.price_for_day'=>'numeric|gt:0|required',
-            'data.state'=>'required|in:'.implode(',', $this->states),
-            'data.municipality'=>'required',
-            'address.street'=>'required',
-            'address.cross_street1'=>'required',
-            'address.cross_street2'=>'required',
-            'address.house_number'=>'required',
-            'address.suburb'=>'required',
-            'address.postcode'=>'required|numeric'
-
+            'data.type'=>'required',
+            'data.attributes.description'=>'required',
+            'data.attributes.price_for_day'=>'numeric|gt:0|required',
+            'data.attributes.state'=>'required|in:'.implode(',', $this->states),
+            'data.attributes.municipality'=>'required',
+            'data.address.street'=>'required',
+            'data.address.cross_street1'=>'required',
+            'data.address.cross_street2'=>'required',
+            'data.address.house_number'=>'required',
+            'data.address.suburb'=>'required',
+            'data.address.postcode'=>'required|numeric'
         ];
 
+    }
+    public function messages()
+    {
+        return[
+            'data.attributes.description.required' => 'La :attribute no es enviado en la solicitud',
+        ];
     }
     protected function failedValidation(Validator $validator)
     {
