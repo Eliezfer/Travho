@@ -1,21 +1,13 @@
 <?php
 
-<<<<<<< HEAD
-namespace Tests\Feature;
-=======
 namespace Tests\Feature\UserTest;
->>>>>>> develop
 
 use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-<<<<<<< HEAD
-use Illumintae\Foundation\Http\FormRequest;
-=======
 use Illuminate\Foundation\Http\FormRequest;
->>>>>>> develop
 use Illuminate\Support\Facades\Validator;
 
 class UserTest extends TestCase
@@ -27,11 +19,7 @@ class UserTest extends TestCase
      *
      * @return void
      */
-<<<<<<< HEAD
-    public function test_client_can_create_user()
-=======
     public function test_client_can_create_user_UserTest()
->>>>>>> develop
     {
         // GIVEN 
         // El cliente tiene una rapresentación de un Usuario que quiere agregar a la aplicación
@@ -53,11 +41,7 @@ class UserTest extends TestCase
         $response = $this->json('POST', 'v1/api/users', $UserData);
 
         // Se verifica el código de Status
-<<<<<<< HEAD
-        $response->assertStatus(400);
-=======
         $response->assertStatus(201);
->>>>>>> develop
 
         $response->assertJson([
             'id' => '1',

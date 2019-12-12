@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use App\User;
+use App\House;
+use App\BookingHouse;
 use Illuminate\Http\Request;
 use \Illuminate\Validation\Validator;
 use App\Http\Resources\User as UserResource;
@@ -9,6 +11,8 @@ use App\Http\Resources\UserCollection;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Str;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Auth\Access\AuthorizationException;
 use App\Http\Requests\AuthRequest;
 
 
@@ -20,12 +24,12 @@ class UserController extends Controller
      *
      */
     public function login(AuthRequest $request){
-        $data = $request['data'];
+        $data = $request['data']['attributes'];
         // Se filtra por email
         $user = User::where('email', $data['email'])->first();
         // Se muestra solamente usuarios activos
-        dd($user->status);
-        if($user->status){
+       
+        if($user != null){
             // Se verifica el email y el password
             if($user && ($data['password'] == $user->password )){
                 return response()->json([
@@ -36,7 +40,7 @@ class UserController extends Controller
                     'api_token' => $user->api_token
                     ],
                     'link' => [
-                        'self' => config('app.url').":8000/api/v1/users/".$this->id,
+                        'self' => config('app.url').":8000/api/v1/users/".$user->id,
                     ]
                 ], 200);
                 // Su contraseña no coincide
@@ -46,14 +50,14 @@ class UserController extends Controller
             }elseif($user == null){
                 throw new AuthenticationException();
             }
-        }elseif(!$user->status){
+        }elseif( $user == null){
             throw new ModelNotFoundException();
         }
             
     }
     public function logout(AuthRequest $request){
         // Se obtiene el request
-        $data = $request['data'];
+        $data = $request['data']['attributes'];
         // Se filtra por email
         $user = User::where('email', $data['email'])->first();
 
@@ -61,7 +65,7 @@ class UserController extends Controller
       // Solamente el usuario puede cerrar su sesión
         $this->authorize('logout',$user);
 
-        if($user->status){
+        if($user != null){
             // Se verifica el email y el password
             if($user && ($data['password'] == $user->password )){
                 // Se modifica el Token del usuario para que se vea 
@@ -79,7 +83,7 @@ class UserController extends Controller
                 // Contraseña o usuario erróneo
                 throw new AuthenticationException();
             }
-        }else{ // User Status está en falso [dado de baja]
+        }elseif($user == null){ // User Status está en falso [dado de baja]
             throw new ModelNotFoundException();
         }
     }
@@ -118,7 +122,7 @@ class UserController extends Controller
     {
   
         // Get data from JSON
-        $data = $request['data'];
+        $data = $request['data']['attributes'];
 
         // Se crea el modelo de un usuario
         // Se genera el Token asociado al usuario
@@ -152,9 +156,9 @@ class UserController extends Controller
         // Se busca el usuario en tabla
 
         // Se retorna el usuario solicitado, con la representación adecuada
-        if($user->status){
+        if( $user != null){
              return new UserResource($user);
-        }elseif(!$user->status){
+        }elseif($user == null){
             throw new ModelNotFoundException();
         }
     }
@@ -181,13 +185,9 @@ class UserController extends Controller
     {
         // SOLAMENTE SI ESTÁ ACTIVO
         $this->authorize('update',$user);
-        //$this->middleware('auth:api');
-        // Solamente el usuario puede actualizar su información [Policies]
-        //$header = $request->header('api_token');
-        // Se busca el usuario en la tabla
-      // $user = user::findOrFail($id);
+   
         // Se obtienen los datos del JSON anidado
-        $data = $request['data'];
+        $data = $request['data']['attributes'];
 
         $filter = [
             "name" => $data['name'],
@@ -197,13 +197,17 @@ class UserController extends Controller
             "birthdate" => $data['birthdate']
         ];
         // Se guarda el user actualizado
-        $user->update($filter);
+        if($user->status){
+            $user->update($filter);
+            // se retorna el user modificado, con la representación anidada
+            // Se retorna el user modificado, con el status 200 (OK)
+             return new UserResource($user);
+        }else{
+            throw new ModelNotFoundException();
+        }
 
-        // Se retorna el user modificado, con el status 200 (OK)
-        // return response()->json($user,200);
+ 
 
-        // se retorna el user modificado, con la representación anidada
-        return new UserResource($user);
     }
 
     /**
@@ -216,24 +220,30 @@ class UserController extends Controller
     {
         // COLOCAR FALSE 
         $this->authorize('delete',$user);
+        if($user->status){
+            $H = House::where('user_id','=',$user->id)
+            -> where('status','=',true)
+            ->get();
 
-        BookingHouse::where('user_id', '=',$user->id)
-        ->where('status','=','in process')
-        ->update(['status' => 'rejected']);
+            $h = House::where('user_id','=',$user->id)
+            -> where('status','=',true)
+            -> update(['status' => 'false']);
 
-        House::where('user_id','=',$user->id)
-        ->where('status','=','true')
-        ->update(['status' => 'false']);    
 
-       // $header = $request->header('api_token');
-        // Solamente el mismo usuario puede destruir su usuario
-        //$userToDestroy = User::findOrFail($id);
+            
+            foreach ($H as $House){
+                $b = BookingHouse::where('house_id','=',$House->id)
+                ->where('status','=','in process')
+                ->update(['status' => 'rejected']);
+            }
+            // Cambiar el estado Status a False [No borrar]
+            $user->update(['status' => 'False']);
 
-        // Cambiar el estado Status a False [No borrar]
-        $user->update(['status' => 'true']);
-        //$user->delete();
-        
-        return response(null,204);
+            
+            return response(null,204);
+        }else{
+            throw new ModelNotFoundException();
+        }
     }
 
 }

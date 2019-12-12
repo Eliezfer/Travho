@@ -7,6 +7,7 @@ use App\House;
 use App\User;
 use App\BookingHouse;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\HouseRequest;
 use Illuminate\Support\Facades\Auth;
@@ -64,9 +65,8 @@ class HouseController extends Controller
     {
 
         $query_string=$request->query();
-        $data_address=$request['address'];
-
-        $data_house=$request['data'];
+        $data_address=$request['data']['address'];
+        $data_house=$request['data']['attributes'];
         $address=Address::create($data_address);
         $data_house["address_id"]=$address['id'];
 
@@ -88,6 +88,9 @@ class HouseController extends Controller
      */
     public function show(House $house)
     {
+        if(!$house['status']){
+            throw new ModelNotFoundException();
+        }
         return new HouseResource($house);
     }
 
@@ -113,10 +116,10 @@ class HouseController extends Controller
     public function update(House $house,HouseRequest $request)
     {
       //verifica que este autenticado
-
         $this->authorize('update',$house);
-        $data_address=$request['address'];
-        $data_house=$request['data'];
+
+        $data_address=$request['data']['address'];
+        $data_house=$request['data']['attributes'];
 
         $house->update($data_house);
         $house->address->update($data_address);
@@ -134,12 +137,13 @@ class HouseController extends Controller
     {
         $this->authorize('delete',$house);
         //Busca los booking de las casas a eliminar y los cancela
-        $h=BookingHouse::where('house_id','=',$house['id'])
+        BookingHouse::where('house_id','=',$house['id'])
         ->where('status','=','in process')
         ->update(['status'=>'rejected']);
         //da de baja la casa
 
-        $house->update(['status'=>'false']);
+        $house['status']='false';
+        $house->save();
         return response("",204);
     }
 }

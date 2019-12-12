@@ -22,12 +22,13 @@ class User extends Authenticatable
         'cellphone',  
         'email',  
         'birthdate',
-   //     'api_token'
+         'api_token',
         
     ];
 
     protected $attributes = [
-        'status' => 'true'
+        'status' => 'true',
+
     ];
 
     /**
