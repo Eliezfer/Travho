@@ -10,7 +10,9 @@ use Tests\TestCase;
 
 class HouseCreateTest extends TestCase
 {
-             /**
+
+    use RefreshDatabase;
+     /**
      * CREATE-1
      */
     public function test_user_can_create_a_house()
@@ -354,7 +356,7 @@ class HouseCreateTest extends TestCase
                 //cuando
            $response = $this->actingAs($user)->json('POST', '/api/v1/houses?api_token='.$user['api_token'], $houseData);
                //entonces
-           $body = $response->decodeResponseJson();
+
            $response->assertStatus(422);
            $response->assertJson([
             "errors"=> [
