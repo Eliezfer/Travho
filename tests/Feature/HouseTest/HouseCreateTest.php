@@ -217,6 +217,7 @@ class HouseCreateTest extends TestCase
                 [
                     "code"=> "ERROR-1",
                     "title"=> "Uprocessable Entity"
+
                 ]
             ]
 
