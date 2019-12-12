@@ -36,7 +36,7 @@ class AuthRequest extends FormRequest
         return[
             'data.attributes.email.required' => 'El :attribute es requerido',
             'data.attributes.email.email' => 'El :attribute el formato del email no es correcto',
-            'data.attributes.password.required' => 'La :attribute es requerido',
+            'data.attributes.password.required' => 'El :attribute es requerido',
             
         ];
     }

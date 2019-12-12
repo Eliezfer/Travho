@@ -634,90 +634,90 @@ class UserTest extends TestCase
     // }
 
        
-     /**
-      * LOGIN-3
-      * No password
-      */
-    public function test_client_dont_send_password()
-    {
-                //Given 
-        // El cliente una representación del usuario para loguearse en la API
-        // Request Body
+    //  /**
+    //   * LOGIN-3
+    //   * No password
+    //   */
+    // public function test_client_dont_send_password()
+    // {
+    //             //Given 
+    //     // El cliente una representación del usuario para loguearse en la API
+    //     // Request Body
 
-        $userData = [
-            'data' => [
-                'email' => 'alejandro@gmail.com ', 
-                'password' => '', 
-            ]
-        ];
+    //     $userData = [
+    //         'data' => [
+    //             'email' => 'alejandro@gmail.com ', 
+    //             'password' => '', 
+    //         ]
+    //     ];
 
-        // WHEN
-        // Se envía un request con la información necesaria para loguear un usuario
-        $response = $this->json('POST',"api/v1/users/login", $userData);
+    //     // WHEN
+    //     // Se envía un request con la información necesaria para loguear un usuario
+    //     $response = $this->json('POST',"api/v1/users/login", $userData);
 
-        // THEN 
-        // Retornar código 404 
+    //     // THEN 
+    //     // Retornar código 404 
         
-        $response->assertStatus(422);
+    //     $response->assertStatus(422);
 
-        $body = $response->decodeResponseJson();
+    //     $body = $response->decodeResponseJson();
 
-        // Asegurar que el usuario es correcto, verificando su 
-        // email y password            
-        $response->assertJson([
-            'errors' => [[
-                'code' => 'Error-1',
-                'title' => 'Unprocessable Entity',
-                ]
-            ]
-        ]);
-    }
+    //     // Asegurar que el usuario es correcto, verificando su 
+    //     // email y password            
+    //     $response->assertJson([
+    //         'errors' => [[
+    //             'code' => 'Error-1',
+    //             'title' => 'Unprocessable Entity',
+    //             ]
+    //         ]
+    //     ]);
+    // }
 
-    /**
-     * LOGIN-4
-     * Password Incorrect
-     */
-    public function test_client_send_wrong_password()
-    {
+    // /**
+    //  * LOGIN-4
+    //  * Password Incorrect
+    //  */
+    // public function test_client_send_wrong_password()
+    // {
 
-        //Given 
+    //     //Given 
 
-        // Existe una representación en la base de datos 
-        $user = factory(User::class)->create([
-                'email' => 'agcfinal1.0@gmail.com',
-                'user' => 'AGC',
-                'name' => 'Alejandro',
-                'password' => '12345',
-                'api_token' => Str::random(80),
-            ]);
+    //     // Existe una representación en la base de datos 
+    //     $user = factory(User::class)->create([
+    //             'email' => 'agcfinal1.0@gmail.com',
+    //             'user' => 'AGC',
+    //             'name' => 'Alejandro',
+    //             'password' => '12345',
+    //             'api_token' => Str::random(80),
+    //         ]);
         
         
-        // El cliente tiene una representación del usuario para loguearse en la API
-        // Request Body
-            $userData = [
-                'data' => [
-                    'email' => 'agcfinal1.0@gmail.com', 
-                    'password' => '12', 
-                ]
-            ];
+    //     // El cliente tiene una representación del usuario para loguearse en la API
+    //     // Request Body
+    //         $userData = [
+    //             'data' => [
+    //                 'email' => 'agcfinal1.0@gmail.com', 
+    //                 'password' => '12', 
+    //             ]
+    //         ];
 
-                // WHEN
-        // Se envía un request con la información necesaria para loguear un usuario
-        $response = $this->json('POST',"api/v1/users/login", $userData);
+    //             // WHEN
+    //     // Se envía un request con la información necesaria para loguear un usuario
+    //     $response = $this->json('POST',"api/v1/users/login", $userData);
 
-        // THEN 
-        // Retornar código 401
+    //     // THEN 
+    //     // Retornar código 401
         
-        $response->assertStatus(401);
+    //     $response->assertStatus(401);
 
-        $body = $response->decodeResponseJson();
+    //     $body = $response->decodeResponseJson();
 
-        // Asegurar que el usuario es correcto, verificando su 
-        // email y password            
-        $response->assertJson([
-            'data' => [
-                'Password' => 'Incorrect',
-            ]
-        ]);
-        }
+    //     // Asegurar que el usuario es correcto, verificando su 
+    //     // email y password            
+    //     $response->assertJson([
+    //         'data' => [
+    //             'Password' => 'Incorrect',
+    //         ]
+    //     ]);
+    //     }
 }

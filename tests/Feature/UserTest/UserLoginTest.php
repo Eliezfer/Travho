@@ -117,7 +117,7 @@ class UserLoginTest extends TestCase
 
     }
       /**
-       * LOGIN-4
+       * LOGIN-3
        * No email formato correcto
        */
     public function test_client_send_invalid_email_login()
@@ -164,19 +164,22 @@ class UserLoginTest extends TestCase
 
        
      /**
-      * LOGIN-3
+      * LOGIN-4
       * No password
       */
     public function test_client_dont_send_password()
     {
-                //Given 
+        //Given 
         // El cliente una representación del usuario para loguearse en la API
         // Request Body
 
         $userData = [
             'data' => [
-                'email' => 'alejandro@gmail.com ', 
-                'password' => '', 
+                'type' => 'user',
+                "attributes" => [
+                    'email' => 'agcfinal1.0@gmail.com', 
+                    'password' => '', 
+                ]
             ]
         ];
 
@@ -189,21 +192,24 @@ class UserLoginTest extends TestCase
         
         $response->assertStatus(422);
 
-        $body = $response->decodeResponseJson();
 
         // Asegurar que el usuario es correcto, verificando su 
         // email y password            
         $response->assertJson([
-            'errors' => [[
-                'code' => 'Error-1',
-                'title' => 'Unprocessable Entity',
-                ]
-            ]
+            "errors" => [[
+                    "code" => "Error-1",
+                    "title" => "Unprocessable Entity",
+                    "message" => [
+                        "data.attributes.password" => 
+                        ["El data.attributes.password es requerido"],
+                    ]
+             ]]
         ]);
+
     }
 
     /**
-     * LOGIN-4
+     * LOGIN-5
      * Password Incorrect
      */
     public function test_client_send_wrong_password()
@@ -223,12 +229,15 @@ class UserLoginTest extends TestCase
         
         // El cliente tiene una representación del usuario para loguearse en la API
         // Request Body
-            $userData = [
-                'data' => [
+        $userData = [
+            'data' => [
+                'type' => 'user',
+                "attributes" => [
                     'email' => 'agcfinal1.0@gmail.com', 
                     'password' => '12', 
                 ]
-            ];
+            ]
+        ];
 
                 // WHEN
         // Se envía un request con la información necesaria para loguear un usuario
@@ -239,16 +248,109 @@ class UserLoginTest extends TestCase
         
         $response->assertStatus(401);
 
-        $body = $response->decodeResponseJson();
+        // Asegurar que el usuario es correcto, verificando su 
+        // email y password            
+        $response->assertJson([
+            'errors' => [
+                'code' => 'ERROR-4',
+                'title' => 'UNAUTHORIZED',
+                'message' => 'Consulte Autenticación de acceso básica y Autenticación de acceso resumido',
+            ]
+        ]);
+    }
+
+    /**
+     * LOGIN-6
+     * 
+     */
+    public function test_client_send_email_no_database()
+    {
+        //Given
+        // Existe una representación en la base de datos 
+        $user = factory(User::class)->create([
+            'email' => 'agcfinal1.0@gmail.com',
+            'user' => 'AGC',
+            'name' => 'Alejandro',
+            'password' => '12345',
+            'api_token' => Str::random(80),
+        ]);
+
+               // El cliente tiene una representación del usuario para loguearse en la API
+        // Request Body
+        $userData = [
+            'data' => [
+                'type' => 'user',
+                "attributes" => [
+                    'email' => 'agc@gmail.com', 
+                    'password' => '12345', 
+                ]
+            ]
+        ];
+                        // WHEN
+        // Se envía un request con la información necesaria para loguear un usuario
+        $response = $this->json('POST',"api/v1/users/login", $userData);
+
+        // THEN 
+        // Retornar código 404
+        
+        $response->assertStatus(404);
 
         // Asegurar que el usuario es correcto, verificando su 
         // email y password            
         $response->assertJson([
-            'data' => [
-                'Password' => 'Incorrect',
+            'errors' => [
+                'code' => 'ERROR-2',
+                'title' => 'NOT FOUND',
+                'message' => 'No se encontro el recurso',
             ]
         ]);
-        }
+    }
 
+    /**
+     * LOGIN-7
+     */
+    public function test_client_try_see_user_delete()
+    {
+        //Given
+        // Existe una representación en la base de datos 
+        $user = factory(User::class)->create([
+            'email' => 'agcfinal1.0@gmail.com',
+            'user' => 'AGC',
+            'name' => 'Alejandro',
+            'password' => '12345',
+            'status' => false,
+            'api_token' => Str::random(80),
+        ]);
+
+               // El cliente tiene una representación del usuario para loguearse en la API
+        // Request Body
+        $userData = [
+            'data' => [
+                'type' => 'user',
+                "attributes" => [
+                    'email' => 'agcfinal1.0@gmail.com', 
+                    'password' => '12345', 
+                ]
+            ]
+        ];
+                        // WHEN
+        // Se envía un request con la información necesaria para loguear un usuario
+        $response = $this->json('POST',"api/v1/users/login", $userData);
+
+        // THEN 
+        // Retornar código 404
+        
+        $response->assertStatus(404);
+
+        // Asegurar que el usuario es correcto, verificando su 
+        // email y password            
+        $response->assertJson([
+            'errors' => [
+                'code' => 'ERROR-2',
+                'title' => 'NOT FOUND',
+                'message' => 'No se encontro el recurso',
+            ]
+        ]);
+    }
 
 }

@@ -27,9 +27,12 @@ class UserController extends Controller
         $data = $request['data']['attributes'];
         // Se filtra por email
         $user = User::where('email', $data['email'])->first();
-        // Se muestra solamente usuarios activos
-       
-        if($user != null){
+        // No se encuentra usuario
+       if($user == null){
+        throw new ModelNotFoundException();
+       }
+       // Se muestra solamente usuarios activos
+        if($user->status){
             // Se verifica el email y el password
             if($user && ($data['password'] == $user->password )){
                 return response()->json([
@@ -47,12 +50,9 @@ class UserController extends Controller
             }elseif($user && ($data['password'] != $user->password )){
                 throw new AuthenticationException();
                 // No existe usuario en la base de datos
-            }elseif($user == null){
-                throw new AuthenticationException();
             }
-        }elseif( $user == null){
-            throw new ModelNotFoundException();
         }
+        throw new ModelNotFoundException();
             
     }
     public function logout(AuthRequest $request){
