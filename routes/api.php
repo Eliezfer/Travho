@@ -24,6 +24,10 @@ Route::post('bookings', 'BookingHouseController@store');
  * Get a list of bookings
  */
 Route::get('bookings', 'BookingHouseController@index');
+/**
+ * Get a list of bookings from my house
+ */
+Route::get('bookingsFromMyHouse', 'BookingHouseController@indexBookingsFromMyHouse');
 
 /**
  * Get a booking
