@@ -12,6 +12,7 @@ use App\User;
 
 class BookingHouseUpdateTest extends TestCase
 {
+    use RefreshDatabase;
     /**
      * A basic feature test example.
      *
