@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\ValidationException;
 
 
 class UserRequest extends FormRequest
@@ -21,14 +22,23 @@ class UserRequest extends FormRequest
 
     protected function failedValidation(Validator $validator)
     {
-
+        $errors = (new ValidationException($validator))->errors();
         throw new HttpResponseException(response()->json(   [
             "errors" => [[
                 "code" => "Error-1",
                 "title" => "Unprocessable Entity",
-
+                "message" => $errors,
             ]]
         ] ,422));
+    }
+
+
+    public function messages()
+    {
+        return[
+            'data.attributes.password.required' => 'La :attribute es requerido',
+            'data.attributes.email.required' => 'El :attribute es requerido ',
+        ];
     }
 
     /**
@@ -42,8 +52,8 @@ class UserRequest extends FormRequest
     {
         return [
             //
-            'data.email'             =>  'required | email ',
-            'data.password'          =>  'required',
+            'data.attributes.email'             =>  'required | email ',
+            'data.attributes.password'          =>  'required',
         ];
     }
 }
