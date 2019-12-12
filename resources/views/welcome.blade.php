@@ -85,7 +85,7 @@
                 </div>
 
                 <div class="links">
-                    <a href="https://app.swaggerhub.com/apis-docs/GarciaAlejandro/Travelers/1.0.0#/">Docomentación</a>
+                    <a href="https://app.swaggerhub.com/apis-docs/GarciaAlejandro/Travelers/1.0.0#/">Documentación</a>
                     <a href="https://docs.google.com/document/d/1Wp2In0jmpjy7xdZLoG7dgG4OWusw_6lMQfIC0BX3G_M/edit?usp=sharing">Manual de instalación</a>
                     <a href="https://docs.google.com/presentation/d/1x1jKikmfa5_cC1pXXKXzp4ndRq-Tjy0biDd_HEiDVx0/edit?usp=sharing">Presentación</a>
                     <a href="https://github.com/Eliezfer/Travho">Repositorio</a>
