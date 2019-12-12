@@ -26,16 +26,14 @@ class UserDeleteTest extends TestCase
         public function test_client_delete_user()
         {
             $user = factory(User::class)->create();
-            $address=factory(BookingHouse::class)->create();
             $house= factory(House::class)->create([
                 'user_id'=>$user['id'],
-                'address_id'=>$address['id']
             ]); 
 
             // Se llama al Endpoint
             $response = $this->delete('/api/v1/users/'.($user->id)."?api_token=".$user->api_token);
             $response->assertStatus(204);
-            $response->assertJson(null);
+            $response->assertSee(null);
             
         }
     /**
@@ -46,15 +44,7 @@ class UserDeleteTest extends TestCase
         {
             //Given 
             // Existe una representación en la base de datos 
-            $user = factory(User::class)->create([
-                'email' => 'agcfinal1.0@gmail.com',
-                'user' => 'AGC',
-                'birthdate' => '1997-12-02',
-                'cellphone' => '5435678',
-                'name' => 'Alejandro',
-                'password' => '12345',
-                'api_token' => Str::random(80),
-            ]);
+            $user = factory(User::class)->create();
 
             // WHEN
             // No se envía Token
