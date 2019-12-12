@@ -34,7 +34,7 @@ class BookingHouse extends JsonResource
                 'status' => $this->status,
             ],
             'house' => $houseResource,
-            'user' => $userResource,
+            'traveler' => $userResource,
             'link' =>  ['self' => route('bookings', $this->id)]
 
         ];
