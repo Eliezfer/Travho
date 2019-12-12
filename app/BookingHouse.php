@@ -20,15 +20,15 @@ class BookingHouse extends Model
     {
       return $query->where('user_id', auth()->user()->id )
             ->orderBy('id','DESC')
-            ->paginate(1);
+            ->paginate(5);
     }
 
-    public function scopeBookingsOfYourHouse($query) 
+    public function scopeBookingsFromMyHouse($query) 
     {
       return $query->join('houses','booking_houses.house_id','=','houses.id')
             ->where('houses.user_id',auth()->user()->id)
             ->select('booking_houses.*')
-            ->paginate(1);
+            ->paginate(5);
     }
 
     public function scopeBookingsAccept($query, $houseID){

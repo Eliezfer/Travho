@@ -20,6 +20,5 @@ $factory->define(House::class, function (Faker $faker) {
         },
         'description'=> $faker->text(30),
         'price_for_day'=>$faker-> randomFloat(2, 0, 100) ,
-        'status'=>true
     ];
 });
