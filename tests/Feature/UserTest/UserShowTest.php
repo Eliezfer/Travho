@@ -39,9 +39,9 @@ class UserShowTest extends TestCase
          // WHEN
         // Se envía un request con la información necesaria para mostrar un usuario
         $response = $this->json('GET',"api/v1/users/".$user->id."?api_token=".$user['api_token']);
-
+        $body = $response->decodeResponseJson();
         $response->assertJson([
-            'id' => 1,
+            'id' => $body['id'],
             'data' => [
                 'name' => 'Alejandro',
                 'user' => 'AGC',
@@ -50,7 +50,7 @@ class UserShowTest extends TestCase
                 'email' =>'agcfinal1.0@gmail.com',
             ],
             'link' => [
-                "self" => env("APP_URL").':8000/api/v1/users/1',
+                "self" => env("APP_URL").':8000/api/v1/users/'.$body['id'],
             ]
 
         ]);

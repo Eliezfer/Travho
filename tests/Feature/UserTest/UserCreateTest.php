@@ -46,8 +46,9 @@ class UserCreateTest extends TestCase
         $response->assertStatus(201);
 
           // Assert the response has the correct structure and the correct values
+          $body = $response->decodeResponseJson();
           $response->assertJson([
-                'id' => 1,
+                'id' => $body['id'],
                 'data' => [
                     'name' => 'Alejandro',
                     'user' => 'AGC',
@@ -56,7 +57,7 @@ class UserCreateTest extends TestCase
                     'email' =>'agcfinal1.0@gmail.com',
                 ],
                 'link' => [
-                    "self" => env("APP_URL").':8000/api/v1/users/1',
+                    "self" => env("APP_URL").':8000/api/v1/users/'.$body['id'],
                 ]
 
             ]);
@@ -76,7 +77,7 @@ class UserCreateTest extends TestCase
         $this->assertDatabaseHas(
             'users',
             [
-                'id' => '1',
+                'id' => $body['id'],
                 'name' => 'Alejandro',
                 'user' => 'AGC',
                 'birthdate' => '2/12/97',
