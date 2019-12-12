@@ -156,16 +156,14 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        // MOSTRAR SOLAMENTE SI ES ACTIVO
-
+        //SE DEBE MOSTRAR SOLAMENTE SI ES ACTIVO
         // Se busca el usuario en tabla
-
         // Se retorna el usuario solicitado, con la representación adecuada
-        if( $user != null){
-             return new UserResource($user);
-        }elseif($user == null){
-            throw new ModelNotFoundException();
-        }
+        if($user->status == true){     
+                return new UserResource($user);
+        }elseif($user->status == false){
+                 throw new ModelNotFoundException();
+        }   
     }
 
     /**
