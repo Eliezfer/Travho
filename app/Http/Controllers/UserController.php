@@ -27,9 +27,12 @@ class UserController extends Controller
         $data = $request['data']['attributes'];
         // Se filtra por email
         $user = User::where('email', $data['email'])->first();
-        // Se muestra solamente usuarios activos
-       
-        if($user != null){
+        // No se encuentra usuario
+       if($user == null){
+        throw new ModelNotFoundException();
+       }
+       // Se muestra solamente usuarios activos
+        if($user->status){
             // Se verifica el email y el password
             if($user && ($data['password'] == $user->password )){
                 return response()->json([
@@ -47,12 +50,9 @@ class UserController extends Controller
             }elseif($user && ($data['password'] != $user->password )){
                 throw new AuthenticationException();
                 // No existe usuario en la base de datos
-            }elseif($user == null){
-                throw new AuthenticationException();
             }
-        }elseif( $user == null){
-            throw new ModelNotFoundException();
         }
+        throw new ModelNotFoundException();
             
     }
     public function logout(AuthRequest $request){
@@ -60,12 +60,14 @@ class UserController extends Controller
         $data = $request['data']['attributes'];
         // Se filtra por email
         $user = User::where('email', $data['email'])->first();
-
+        if($user == null){
+            throw new ModelNotFoundException();
+        }
       // Se verifica el email y el password
       // Solamente el usuario puede cerrar su sesión
         $this->authorize('logout',$user);
 
-        if($user != null){
+        if($user->status){
             // Se verifica el email y el password
             if($user && ($data['password'] == $user->password )){
                 // Se modifica el Token del usuario para que se vea 
@@ -75,17 +77,20 @@ class UserController extends Controller
                 ];
                 $user->update($data);
                 return response()->json([
-                    "Sesión: " => "Logout",
-                    "api_token" => $user->api_token,
+                    "data" => [
+                        "type" => "user",
+                        "attributes" => [
+                            "Session: " => "Logout",
+                        ]
+                    ]
                 ], 200);
             
             }else{
                 // Contraseña o usuario erróneo
                 throw new AuthenticationException();
             }
-        }elseif($user == null){ // User Status está en falso [dado de baja]
-            throw new ModelNotFoundException();
         }
+        throw new ModelNotFoundException();
     }
 
     /**
@@ -151,16 +156,14 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        // MOSTRAR SOLAMENTE SI ES ACTIVO
-
+        //SE DEBE MOSTRAR SOLAMENTE SI ES ACTIVO
         // Se busca el usuario en tabla
-
         // Se retorna el usuario solicitado, con la representación adecuada
-        if( $user != null){
-             return new UserResource($user);
-        }elseif($user == null){
-            throw new ModelNotFoundException();
-        }
+        if($user->status == true){     
+                return new UserResource($user);
+        }elseif($user->status == false){
+                 throw new ModelNotFoundException();
+        }   
     }
 
     /**
