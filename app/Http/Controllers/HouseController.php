@@ -7,6 +7,7 @@ use App\House;
 use App\User;
 use App\BookingHouse;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\HouseRequest;
 use Illuminate\Support\Facades\Auth;
@@ -76,7 +77,7 @@ class HouseController extends Controller
        $data_house["user_id"]=$user['id'];
 
         $house=House::create($data_house);
-        return $house;
+
         return new HouseResource($house);
     }
 
@@ -88,6 +89,9 @@ class HouseController extends Controller
      */
     public function show(House $house)
     {
+        if($house['status']=='false'){
+            throw new ModelNotFoundException();
+        }
         return new HouseResource($house);
     }
 

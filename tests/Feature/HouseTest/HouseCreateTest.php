@@ -166,7 +166,7 @@ class HouseCreateTest extends TestCase
         $response->assertStatus(401);
         //verificar la estructura devuelta
         $response->assertJson([
-                "message"=> [
+                "errors"=> [
                     "code"=> "ERROR-4",
                     "title"=> "UNAUTHORIZED",
                     "message"=> "Consulte Autenticación de acceso básica y Autenticación de acceso resumido"
