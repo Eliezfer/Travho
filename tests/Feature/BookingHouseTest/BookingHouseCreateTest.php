@@ -121,7 +121,7 @@ class BookingHouseCreateTest extends TestCase
                     'data'=>[
                         'description'=> $house->description,
                         'price_for_day'=> "$house->price_for_day",
-                        'status' => $house->status,
+                        'status' => true,
                         'state' => $house->state,
                         'municipality' => $house->municipality,
                     ],
