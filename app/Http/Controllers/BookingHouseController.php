@@ -29,6 +29,10 @@ class BookingHouseController extends Controller
         return new  BookingHouseResourceCollection($bookingsHouse,200);
     }
 
+    public function indexBookingsFromMyHouse(){
+        $bookingsHouse = BookingHouse::BookingsFromMyHouse();
+        return new  BookingHouseResourceCollection($bookingsHouse,200);
+    }
     /**
      * Store a newly created resource in storage.
      *
