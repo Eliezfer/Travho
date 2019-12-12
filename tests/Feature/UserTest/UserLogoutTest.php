@@ -158,7 +158,7 @@ class UserLogoutTest extends TestCase
         $response = $this->json('POST',"api/v1/users/logout?api_token=".$user['api_token'], $userData);
 
         // THEN 
-        // Retornar código 404 
+        // Retornar código 422 
         
         $response->assertStatus(422);
 

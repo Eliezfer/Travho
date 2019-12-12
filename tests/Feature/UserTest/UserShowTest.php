@@ -140,27 +140,28 @@ class UserShowTest extends TestCase
         * SHOW-4 
         * NO ENCONTRADO
         */
-        public function test_client_try_see_user_no_DB(){
-        //Given 
-        // Existe una representación en la base de datos 
-        $user = factory(User::class)->create();
+        public function test_client_try_see_user_no_DB()
+        {
+            //Given 
+            // Existe una representación en la base de datos 
+            $user = factory(User::class)->create();
 
-         // WHEN
-        // Se envía un request con la información necesaria para mostrar un usuario
-        $response = $this->json('GET',"api/v1/users/".($user->id+1)."?api_token=".$user['api_token']);
+            // WHEN
+            // Se envía un request con la información necesaria para mostrar un usuario
+            $response = $this->json('GET',"api/v1/users/".($user->id+1)."?api_token=".$user['api_token']);
 
-        // No puede ser mostrado por estar dado de baja
-        $response->assertJson([
-            'errors' => [
-                'code' => 'ERROR-2',
-                'title' => 'NOT FOUND',
-                'message' => 'No se encontro el recurso',
-            ]
-        ]);
+            // No puede ser mostrado por estar dado de baja
+            $response->assertJson([
+                'errors' => [
+                    'code' => 'ERROR-2',
+                    'title' => 'NOT FOUND',
+                    'message' => 'No se encontro el recurso',
+                ]
+            ]);
 
-        // Then 
-        // Se asegura el status HTTP recibido
-        $response->assertStatus(404);
+            // Then 
+            // Se asegura el status HTTP recibido
+            $response->assertStatus(404);
 
         }
 
