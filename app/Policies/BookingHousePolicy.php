@@ -114,7 +114,7 @@ class BookingHousePolicy
         $today = now();
         $remainingDays = $today->diffInDays($bookingHouse->check_in);
         return $remainingDays>'3' ? Response::allow()
-        : Response::deny('Acción no autorizada, El tiempo de cancelación ha pasado');
+        : Response::deny('Acción no autorizada, El tiempo de cancelación ha pasado, ya no puede cancelar');
     }
 
 }

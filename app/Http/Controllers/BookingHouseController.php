@@ -98,15 +98,16 @@ class BookingHouseController extends Controller
             $bookingHouse->status = $statusRequest;
         }
         if(auth()->user()->id == $bookingHouse->user_id){
+            //si quiere cancelar el booking acceptado debe verificar que no han pasado tres dias
             if(($statusRequest == 'canceled') && ($bookingHouse->status == 'accepted') ){
                 $this->authorize('updateBookingToCancel',$bookingHouse);
                 $bookingHouse->status = $statusRequest;
             }
-
+            //si quiere cancelar
             if($statusRequest == 'canceled' ){
                 $bookingHouse->status = $statusRequest;
             }
-
+            //si quiere actualizar el booking esta en proceso debe autorizar las fechas disponible
             if($bookingHouse->status == 'in process'){
                 $chekInRequest=$request->input('data.attributes.check_in');
                 $checkOutRequest =$request->input('data.attributes.check_out');
@@ -114,7 +115,7 @@ class BookingHouseController extends Controller
                 $bookingHouse->check_in = $chekInRequest;
                 $bookingHouse->check_out = $checkOutRequest;
             }
-
+            //si se quiere actualizar un booking ya aceptado se crea uno nuevo
             if($bookingHouse->status == 'accepted'){
                 return $this->updateBookingAccepted($bookingHouse, $request);
             }
@@ -125,11 +126,13 @@ class BookingHouseController extends Controller
     }
 
     public function updateBookingAccepted($bookingHouse, $request){
+        $input = $request->input('data.attributes');
+        $newRequest['data']['attributes']['house_id'] = $bookingHouse->house_id;
+        $newRequest['data']['attributes']['check_in'] = $input['check_in'];
+        $newRequest['data']['attributes']['check_out'] = $input['check_out'];
         $bookingHouse->status = 'canceled';
-                $bookingHouse->save();
-                $input = $request->input('data.attributes');
-                $input['house_id'] = $bookingHouse->house_id;
-                return $this->store(new BookingHouseCreateRequest($input));
+        $bookingHouse->save();
+        return $this->store(new BookingHouseCreateRequest($newRequest));
     }
 
     public function authorizeUpdate($bookingHouse){
