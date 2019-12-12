@@ -89,7 +89,7 @@ class HouseController extends Controller
      */
     public function show(House $house)
     {
-        if($house['status']=='false'){
+        if(!$house['status']){
             throw new ModelNotFoundException();
         }
         return new HouseResource($house);
@@ -117,8 +117,8 @@ class HouseController extends Controller
     public function update(House $house,HouseRequest $request)
     {
       //verifica que este autenticado
-
         $this->authorize('update',$house);
+
         $data_address=$request['address'];
         $data_house=$request['data'];
 
@@ -143,7 +143,8 @@ class HouseController extends Controller
         ->update(['status'=>'rejected']);
         //da de baja la casa
 
-        $house->update(['status'=>'false']);
+        $house['status']='false';
+        $house->save();
         return response("",204);
     }
 }
