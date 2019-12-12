@@ -37,7 +37,7 @@ class House extends JsonResource
                 'postcode'=>$this->address['postcode']
             ],
             'link'=>[
-                'self'=>config('app.url').'/api/houses/'.$this->id,
+                'self'=>config('app.url').'/api/v1/houses/'.$this->id,
             ],
             'User'=>[
                 'data'=>[
@@ -48,7 +48,7 @@ class House extends JsonResource
                     'email'=>$this->user['email']
                 ],
                 'link'=>[
-                    'self'=>config('app.url').'/api/user/'.$this->user['id'],
+                    'self'=>config('app.url').'/api/v1/user/'.$this->user['id'],
                 ]
             ]
 
