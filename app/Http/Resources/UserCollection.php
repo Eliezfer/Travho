@@ -29,7 +29,7 @@ class UserCollection extends ResourceCollection
                     //'api_token' => $this->api_token
                     ],
                 'link' =>[
-                    'self' => "https://".$URL."/api/products/".$this->id
+                    'self' => "https://".$URL."/api/v1/products/".$this->id
                 ],
             ]
         ];

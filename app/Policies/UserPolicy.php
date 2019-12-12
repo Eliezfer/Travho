@@ -56,7 +56,6 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        //
         return $user->api_token == $model->api_token;
       // return true;
     }
@@ -71,7 +70,6 @@ class UserPolicy
     public function delete(User $user, User $model)
     {
         //
-        dd($user->api_token == $model->api_token);
         return $user->api_token == $model->api_token;
 
     }

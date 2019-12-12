@@ -41,7 +41,7 @@ class AuthRequest extends FormRequest
         return [
             //
             'data.password'          =>  'required', // Mayor a tal número
-            'data.email'             =>  'required ',
+            'data.email'             =>  'required | email ',
         ];
     }
 }
