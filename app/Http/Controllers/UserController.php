@@ -60,12 +60,14 @@ class UserController extends Controller
         $data = $request['data']['attributes'];
         // Se filtra por email
         $user = User::where('email', $data['email'])->first();
-
+        if($user == null){
+            throw new ModelNotFoundException();
+        }
       // Se verifica el email y el password
       // Solamente el usuario puede cerrar su sesión
         $this->authorize('logout',$user);
 
-        if($user != null){
+        if($user->status){
             // Se verifica el email y el password
             if($user && ($data['password'] == $user->password )){
                 // Se modifica el Token del usuario para que se vea 
@@ -75,17 +77,20 @@ class UserController extends Controller
                 ];
                 $user->update($data);
                 return response()->json([
-                    "Sesión: " => "Logout",
-                    "api_token" => $user->api_token,
+                    "data" => [
+                        "type" => "user",
+                        "attributes" => [
+                            "Session: " => "Logout",
+                        ]
+                    ]
                 ], 200);
             
             }else{
                 // Contraseña o usuario erróneo
                 throw new AuthenticationException();
             }
-        }elseif($user == null){ // User Status está en falso [dado de baja]
-            throw new ModelNotFoundException();
         }
+        throw new ModelNotFoundException();
     }
 
     /**
