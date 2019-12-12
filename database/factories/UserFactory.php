@@ -22,9 +22,9 @@ $factory->define(User::class, function (Faker $faker) {
         'user' => $faker->name,
         'email' => $faker->unique()->safeEmail,
         'email_verified_at' => now(),
-        'cellphone' => '9999020190',
-        'birthdate' => '1998-05-01',
-        'password' => '12345', // password
+        'cellphone' =>$faker->e164PhoneNumber ,
+        'birthdate' => $faker->date($format = 'Y-m-d', $max = 'now'),
+        'password' => $faker->password, // password
         'remember_token' => Str::random(10),
         'api_token' => Str::random(80)
 
