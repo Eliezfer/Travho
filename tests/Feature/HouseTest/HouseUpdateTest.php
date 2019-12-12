@@ -125,7 +125,7 @@ class HouseUpdateTest extends TestCase
       $house= factory(House::class)->create([
           'user_id'=>$user['id'],
           'address_id'=>$address['id']
-      ]);
+        ]);
       //dado
       $houseData =[
         "data"=>[
@@ -146,7 +146,7 @@ class HouseUpdateTest extends TestCase
             "postcode"=> "97000"
           ]
         ]
-    ];
+        ];
           //cuando
           $response = $this->actingAs($user)->json('PUT', '/api/v1/houses/'.$house['id'], $houseData);
           //entonces
@@ -196,7 +196,7 @@ class HouseUpdateTest extends TestCase
             "postcode"=> "97000"
           ]
         ]
-    ];
+        ];
           //cuando
         $response = $this->actingAs($user)->json('PUT', '/api/v1/houses/'.$house['id'].'?api_token='.$user2['api_token'], $houseData);
           //entonces
@@ -222,23 +222,25 @@ class HouseUpdateTest extends TestCase
             'address_id'=>$address['id']
         ]);
         $houseData =[
-               "data"=>[
-                 "description"=> "new house",
-                 "price_for_day"=> "d",
-                 "status"=> "true",
-                 "state"=> "Yucatán",
-                 "municipality"=> "Merida"
-               ]
-                 ,
-               "address"=> [
-                 "street"=> "29",
-                 "cross_street1"=> "31",
-                 "cross_street2"=> "33",
-                 "house_number"=> "23",
-                 "suburb"=> "centro",
-                 "postcode"=> "97000"
-               ]
-               ];
+            "data"=>[
+                "type"=>"house",
+                "attributes"=>[
+              "description"=> "new house",
+              "price_for_day"=> "d",
+              "status"=> "true",
+              "state"=> "Yucatán",
+              "municipality"=> "Merida",
+                ],
+              "address"=> [
+                "street"=> "29",
+                "cross_street1"=> "31",
+                "cross_street2"=> "33",
+                "house_number"=> "23",
+                "suburb"=> "centro",
+                "postcode"=> "97000"
+              ]
+            ]
+        ];
                 //cuando
             $response = $this->actingAs($user)->json('PUT', '/api/v1/houses/'.$house['id'].'?api_token='.$user['api_token'], $houseData);
                 //entonces
@@ -248,7 +250,13 @@ class HouseUpdateTest extends TestCase
             "errors"=> [
                 [
                     "code"=> "ERROR-1",
-                    "title"=> "Uprocessable Entity"
+                    "title"=> "Uprocessable Entity",
+                    "message"=> [
+                        "data.attributes.price_for_day"=> [
+                            "El precio por día debe ser un número mayor a 0"
+                        ]
+                    ]
+
                 ]
             ]
 
@@ -256,7 +264,7 @@ class HouseUpdateTest extends TestCase
 
     }
     /**
-     * CREATE-5
+     * UPDATE-5
      */
     public function test_user_can_update_a_house_price_for_day_is_less_than_0()
     {
@@ -267,23 +275,25 @@ class HouseUpdateTest extends TestCase
             'address_id'=>$address['id']
         ]);
         $houseData =[
-               "data"=>[
-                 "description"=> "new house",
-                 "price_for_day"=> "-3",
-                 "status"=> "true",
-                 "state"=> "belga",
-                 "municipality"=> "Merida"
-               ]
-                 ,
-               "address"=> [
-                 "street"=> "29",
-                 "cross_street1"=> "31",
-                 "cross_street2"=> "33",
-                 "house_number"=> "23",
-                 "suburb"=> "centro",
-                 "postcode"=> "w"
-               ]
-               ];
+            "data"=>[
+                "type"=>"house",
+                "attributes"=>[
+              "description"=> "new house",
+              "price_for_day"=> "-3",
+              "status"=> "true",
+              "state"=> "Yucatán",
+              "municipality"=> "Merida",
+                ],
+              "address"=> [
+                "street"=> "29",
+                "cross_street1"=> "31",
+                "cross_street2"=> "33",
+                "house_number"=> "23",
+                "suburb"=> "centro",
+                "postcode"=> "97000"
+              ]
+            ]
+        ];
                 //cuando
             $response = $this->actingAs($user)->json('PUT', '/api/v1/houses/'.$house['id'].'?api_token='.$user['api_token'], $houseData);
                 //entonces
@@ -292,7 +302,12 @@ class HouseUpdateTest extends TestCase
             "errors"=> [
                 [
                     "code"=> "ERROR-1",
-                    "title"=> "Uprocessable Entity"
+                    "title"=> "Uprocessable Entity",
+                    "message"=> [
+                        "data.attributes.price_for_day"=> [
+                            "El precio por día debe ser un número mayor a 0"
+                        ]
+                    ]
                 ]
             ]
 
@@ -300,7 +315,7 @@ class HouseUpdateTest extends TestCase
 
     }
     /**
-     * CREATE-6
+     * UPDATE-6
      */
     public function test_user_can_update_a_house_state_is_not_a_of_mexico()
     {
@@ -311,23 +326,25 @@ class HouseUpdateTest extends TestCase
             'address_id'=>$address['id']
         ]);
         $houseData =[
-               "data"=>[
-                 "description"=> "new house",
-                 "price_for_day"=> "22",
-                 "status"=> "true",
-                 "state"=> "belga",
-                 "municipality"=> "Merida"
-               ]
-                 ,
-               "address"=> [
-                 "street"=> "29",
-                 "cross_street1"=> "31",
-                 "cross_street2"=> "33",
-                 "house_number"=> "23",
-                 "suburb"=> "centro",
-                 "postcode"=> "97000"
-               ]
-               ];
+            "data"=>[
+                "type"=>"house",
+                "attributes"=>[
+              "description"=> "new house",
+              "price_for_day"=> "22",
+              "status"=> "true",
+              "state"=> "belga",
+              "municipality"=> "Merida",
+                ],
+              "address"=> [
+                "street"=> "29",
+                "cross_street1"=> "31",
+                "cross_street2"=> "33",
+                "house_number"=> "23",
+                "suburb"=> "centro",
+                "postcode"=> "97000"
+              ]
+            ]
+        ];
                 //cuando
             $response = $this->actingAs($user)->json('PUT', '/api/v1/houses/'.$house['id'].'?api_token='.$user['api_token'], $houseData);
                 //entonces
@@ -336,7 +353,12 @@ class HouseUpdateTest extends TestCase
             "errors"=> [
                 [
                     "code"=> "ERROR-1",
-                    "title"=> "Uprocessable Entity"
+                    "title"=> "Uprocessable Entity",
+                    "message"=> [
+                        "data.attributes.state"=> [
+                            "El estado no es valido"
+                        ]
+                    ]
                 ]
             ]
 
@@ -353,24 +375,27 @@ class HouseUpdateTest extends TestCase
         $house= factory(House::class)->create([
             'user_id'=>$user['id'],
             'address_id'=>$address['id']
-        ]); $houseData =[
-               "data"=>[
-                 "description"=> "new house",
-                 "price_for_day"=> "22",
-                 "status"=> "true",
-                 "state"=> "belga",
-                 "municipality"=> "Merida"
-               ]
-                 ,
-               "address"=> [
-                 "street"=> "29",
-                 "cross_street1"=> "31",
-                 "cross_street2"=> "33",
-                 "house_number"=> "23",
-                 "suburb"=> "centro",
-                 "postcode"=> "w"
-               ]
-               ];
+        ]);
+        $houseData =[
+            "data"=>[
+                "type"=>"house",
+                "attributes"=>[
+              "description"=> "new house",
+              "price_for_day"=> "22",
+              "status"=> "true",
+              "state"=> "Yucatán",
+              "municipality"=> "Merida",
+                ],
+              "address"=> [
+                "street"=> "29",
+                "cross_street1"=> "31",
+                "cross_street2"=> "33",
+                "house_number"=> "23",
+                "suburb"=> "centro",
+                "postcode"=> "w"
+              ]
+            ]
+        ];
                 //cuando
             $response = $this->actingAs($user)->json('PUT', '/api/v1/houses/'.$house['id'].'?api_token='.$user['api_token'], $houseData);
                 //entonces
@@ -379,7 +404,12 @@ class HouseUpdateTest extends TestCase
             "errors"=> [
                 [
                     "code"=> "ERROR-1",
-                    "title"=> "Uprocessable Entity"
+                    "title"=> "Uprocessable Entity",
+                    "message"=> [
+                        "data.address.postcode"=> [
+                            "El código postal debe ser un número"
+                        ]
+                    ]
                 ]
             ]
 

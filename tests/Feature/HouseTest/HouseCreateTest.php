@@ -144,7 +144,8 @@ class HouseCreateTest extends TestCase
     /**
      * CREATE-2
      */
-    public function test_user_can_create_a_house_is_not_authenticate(){
+    public function test_user_can_create_a_house_is_not_authenticate()
+    {
         //dado
 
         $houseData =[
@@ -185,7 +186,8 @@ class HouseCreateTest extends TestCase
     /**
      * CREATE-3
      */
-    public function test_user_can_create_a_house_price_for_day_is_not_a_number(){
+    public function test_user_can_create_a_house_price_for_day_is_not_a_number()
+    {
         $user = factory(User::class)->create();
         $houseData =[
             "data"=>[
@@ -216,8 +218,12 @@ class HouseCreateTest extends TestCase
             "errors"=> [
                 [
                     "code"=> "ERROR-1",
-                    "title"=> "Uprocessable Entity"
-
+                    "title"=> "Uprocessable Entity",
+                    "message"=> [
+                        "data.attributes.price_for_day"=> [
+                            "El precio por día debe ser un número mayor a 0"
+                        ]
+                    ]
                 ]
             ]
 
@@ -227,7 +233,8 @@ class HouseCreateTest extends TestCase
     /**
      * CREATE-4
      */
-    public function test_user_can_create_a_house_price_for_day_is_less_than_0(){
+    public function test_user_can_create_a_house_price_for_day_is_less_than_0()
+    {
         $user = factory(User::class)->create();
         $houseData =[
             "data"=>[
@@ -258,7 +265,13 @@ class HouseCreateTest extends TestCase
             "errors"=> [
                 [
                     "code"=> "ERROR-1",
-                    "title"=> "Uprocessable Entity"
+                    "title"=> "Uprocessable Entity",
+                    "message"=> [
+                        "data.attributes.price_for_day"=> [
+                            "El precio por día debe ser un número mayor a 0"
+                        ]
+                    ]
+
                 ]
             ]
 
@@ -268,7 +281,8 @@ class HouseCreateTest extends TestCase
     /**
      * CREATE-5
      */
-    public function test_user_can_create_a_house_state_is_not_a_of_mexico(){
+    public function test_user_can_create_a_house_state_is_not_a_of_mexico()
+    {
         $user = factory(User::class)->create();
         $houseData =[
             "data"=>[
@@ -299,7 +313,12 @@ class HouseCreateTest extends TestCase
             "errors"=> [
                 [
                     "code"=> "ERROR-1",
-                    "title"=> "Uprocessable Entity"
+                    "title"=> "Uprocessable Entity",
+                    "message"=> [
+                        "data.attributes.state"=> [
+                            "El estado no es valido"
+                        ]
+                    ]
                 ]
             ]
 
@@ -309,7 +328,8 @@ class HouseCreateTest extends TestCase
         /**
      * CREATE-6
      */
-    public function test_user_can_create_a_house_postcode_is_not_a_number(){
+    public function test_user_can_create_a_house_postcode_is_not_a_number()
+    {
         $user = factory(User::class)->create();
         $houseData =[
             "data"=>[
@@ -340,7 +360,12 @@ class HouseCreateTest extends TestCase
             "errors"=> [
                 [
                     "code"=> "ERROR-1",
-                    "title"=> "Uprocessable Entity"
+                    "title"=> "Uprocessable Entity",
+                    "message"=> [
+                        "data.address.postcode"=> [
+                            "El código postal debe ser un número"
+                        ]
+                    ]
                 ]
             ]
 
