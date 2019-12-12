@@ -26,18 +26,17 @@ class HouseDeleteTest extends TestCase
         ]);
         $response= $this->actingAs($user)->DELETE('/api/v1/houses/'.$house['id'].'?api_token='.$user['api_token']);
         $response->assertStatus(204);
-        $this->assertDatabaseMissing(
+        $this->assertDatabaseHas(
             'houses'
            ,[
                'id'=>$house['id'],
-               'user_id'=>$house['id_user'],
+               'user_id'=>$house['user_id'],
                'address_id'=>$house['id'],
                'description'=>$house['description'],
                'price_for_day'=>$house['price_for_day'],
-               'status'=>$house['status'],
-
                'state'=>$house['state'],
                'municipality'=>$house['municipality'],
+               'status'=>false,
            ]);
            $this->assertDatabaseHas(
                'addresses'
