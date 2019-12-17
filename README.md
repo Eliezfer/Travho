@@ -1,78 +1,123 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+# **Travho**
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+## **Acerca de Travho**
 
-## About Laravel
+TRAVHO es una API simple que permite a los usuarios prestar servicio de renta de casas, así como , solicitar servicios de renta a otros usuarios. Lo anterior se base en las relaciones de casas, rentas y usuarios.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **[Documentación](https://app.swaggerhub.com/apis-docs/GarciaAlejandro/Travelers/1.0.0#/ ).**
+- **[Manual de instalación](https://docs.google.com/document/d/1Wp2In0jmpjy7xdZLoG7dgG4OWusw_6lMQfIC0BX3G_M/edit).**
+- **[Diagrama de recursos](https://drive.google.com/file/d/1779bWg0p5Fz1k32d5vKmvwjmCtwBdihe/view?usp=sharing).**
+- **[Deploy](https://evening-wave-89560.herokuapp.com/).**
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## **Pre-requisitos**
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Php mayor a  7.2.9
+- manejador de paquetes Composer version 1.9.1 o mayora
+- Postgresql instalado y añadido al path
+- manejador de versiones Git version  2.21.
 
-## Learning Laravel
+## **Instalación**
+- ## Paso 1 
+    clonar el repositorio de la api con el siguiente comand  
+    ~~~
+    git clone https://github.com/Eliezfer/Travho.git 
+    ~~~
+- ## Paso 2 
+     ingresa a la dirección del proyecto que se ha clonado por medio de la consola 
+- ## Paso 3 
+    Ejecute el comando   
+    ~~~
+    composer install 
+    ~~~
+    y espere a que termine de ejecutarse
+- ## Paso 4 
+    Crear una base de datos en Postgresql ejecutar el comando  
+    ~~~
+    psql -U postgres 
+    ~~~
+    Cambia "postgres" por el nombre de tu usuario si postgres no es el usuario.  
+    acceder al bash de postgres y ejecuta ` \l ` 
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- ## Paso 5 
+    Para crear tu base de datos ejecute en el mismo bash de postgres  
+    ~~~ 
+    CREATE DATABASE travho; 
+    ~~~   
+    y verifica que se creó con el comando   
+    ~~~
+    \l 
+    ~~~   
+    ejecuta el comando  
+    ~~~
+    exit 
+    ~~~   
+    para salir del bash de postgres
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- ## Paso 6 
+    Crea un archivo `.env` en la carpeta Travho y abre el archivo `.env.example` y copia su contenido al archivo `.env` que acabas de crear.
+- ## Paso 7 
+    Accede al .env y cambia las siguientes variables y guarda el archivo
+    ~~~
+    APP_NAME=Laravel
+    APP_ENV=local
+    APP_KEY=base64:P09E8lmC6yYzENKtfRwULulQ3So68jPzDJg2Rr0cfGg=
+    APP_DEBUG=true
+    APP_URL=http://localhost
+    DB_CONNECTION=pgsql
+    DB_HOST=127.0.0.1
+    DB_PORT=5432
+    DB_DATABASE=travho
+    DB_USERNAME=root
+    DB_USERNAME=postgres
+    DB_PASSWORD=
+    ~~~
+    En ocaciones puede que `DB_USERNAME` y `DB_PASSWORD` sean otros, si este es su caso cambie el usuario y contraseña del manejador de su equipo.
 
-## Laravel Sponsors
+- ## Paso 8 
+    Ejecutar el siguiente comando en la dirección del proyecto clonado para abrir la consola de laravel
+    ~~~
+    php artisan tinker
+    ~~~
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+- ## Paso 9 
+    Se procede a verificar la conexión entre la base de datos y el archivo de configuración estando en la consola de laravel
+    Se ejecuta el siguiente comando:
+    ~~~
+    DB::connection()->getPdo()
+    ~~~
+    Si todo es correcto saldrá lo siguiente
+    ~~~
+    => PDO {#2960
+        inTransaction: false,
+        attributes: {
+        CASE: NATURAL,
+        ERRMODE: EXCEPTION,
+        PERSISTENT: false,
+        DRIVER_NAME: "pgsql",
+        SERVER_INFO: "PID: 984; Client Encoding: UTF8; Is Superuser: on; Session Authorization: postgres; Date Style: ISO, MDY",
+        ORACLE_NULLS: NATURAL,
+        CLIENT_VERSION: "11.5",
+        SERVER_VERSION: "11.4 (Debian 11.4-1.pgdg90+1)",
+        STATEMENT_CLASS: [
+            "PDOStatement",
+        ],
+        EMULATE_PREPARES: false,
+        CONNECTION_STATUS: "Connection OK; waiting to send.",
+        DEFAULT_FETCH_MODE: BOTH,
+        },
+    }
+    ~~~
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
+- ## Paso 10 
+    sal del bash de tinker ejecutando:
+    ~~~
+    exit
+    ~~~
 
-## Contributing
+- ## Paso 11 
+    Ejecute el siguiente comando para migrar las tablas a la base de datos 
+    ~~~
+    php artisan migrate
+    ~~~
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+y listo finalmente se ha instaldo la api y la base de datos, para conocer los endpoints de Travho visite la **[Documentación](https://app.swaggerhub.com/apis-docs/GarciaAlejandro/Travelers/1.0.0#/ ).**
